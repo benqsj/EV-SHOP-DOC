@@ -1,0 +1,13 @@
+{
+  "name": "ev-shop-doc",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node docs-site/server.mjs",
+    "build": "node docs-site/build.mjs"
+  },
+  "engines": { "node": ">=20" },
+  "dependencies": {
+    "pg": "8.13.1"
+  }
+}
