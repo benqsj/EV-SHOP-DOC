@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ka">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>icomers — დოკუმენტაცია</title>
+  <meta name="robots" content="noindex">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+  <style>/*STYLE*/</style>
+</head>
+<body>
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn" aria-label="მენიუ">☰</button>
+    <a class="brand" href="#top"><span class="brand-mark">⚡</span> icomers <span class="brand-sub">ტექნიკური დოკუმენტაცია</span></a>
+    <span class="status-pill">დასამტკიცებელი</span>
+    <div class="topbar-right">
+      <a class="progress" href="#12-roadmap--ღია-კითხვები" id="progress" title="ღია კითხვები">
+        <span class="progress-bar"><span id="progressFill"></span></span>
+        <span id="progressText">…</span>
+      </a>
+      <label class="me">
+        <span>თქვენი სახელი</span>
+        <input id="authorInput" placeholder="მაგ. გიორგი (Billing)" maxlength="80">
+      </label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <nav class="sidebar" id="sidebar" aria-label="სარჩევი">
+      <input class="nav-filter" id="navFilter" type="search" placeholder="ძებნა სარჩევში…">
+      <div id="nav"></div>
+      <div class="sidebar-foot">
+        <button type="button" class="link-btn" id="downloadBtn">⬇ პასუხების და დამატებების ჩამოტვირთვა</button>
+        <span class="foot-note" id="modeNote"></span>
+      </div>
+    </nav>
+    <main class="content" id="top">
+      <section class="intro">
+        <h1>icomers — ონლაინ მაღაზია</h1>
+        <p>კომპანიის საკუთარი პროდუქციის (EV დამტენების ნაწილები და აქსესუარები) ონლაინ მაღაზიის არქიტექტურა და ტექნიკური დოკუმენტაცია: backend, frontend, admin panel, API, ინტეგრაციები და deploy.</p>
+      </section>
+      <div id="docs"><p class="loading">იტვირთება…</p></div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>/*MARKED*/</script>
+  <script>/*CONTENT*/</script>
+  <script>/*APP*/</script>
+</body>
+</html>
