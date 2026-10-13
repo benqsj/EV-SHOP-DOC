@@ -4,11 +4,13 @@
 
 An online shop where the company sells **only its own products**: spare parts for EV chargers, cables, connectors, accessories, etc.
 
-The main difference from a regular shop is the **compatibility filter**. The customer selects their charger (brand → model) and sees only the parts that fit it.
+The shop's key feature is the **compatibility filter**. The customer selects their charger (brand → model) and sees only the parts that fit that model, without needing to know the connector type or technical specifications.
 
 ## 2. Scope
 
-### In the MVP
+Project scope: what is included in the first version (MVP) and what will be added later.
+
+### In the first version (MVP)
 - Product catalog with categories, search and filters
 - Compatibility filter (charger brand → model)
 - Two languages: Georgian (default) and English
@@ -25,7 +27,7 @@ Which fulfillment methods do we want in the MVP: only **pickup from the office**
 :::
 
 
-### Not in the MVP (later)
+### Not in the first version (later)
 - B2B / companies (special prices, payment by invoice). **The schema is designed so this can be added later**
 - Integration with courier companies
 - Mobile app and push notifications
