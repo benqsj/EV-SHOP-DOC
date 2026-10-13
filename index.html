@@ -162,6 +162,11 @@ button.ghost { font: inherit; font-size: 14px; border: 1px solid var(--border); 
 .edit-actions { display: flex; justify-content: flex-end; gap: 6px; }
 .addition .edit-form .primary { background: var(--add); }
 
+.del-btn:hover { color: #c2410c; }
+.del-confirm { display: inline-flex; gap: 6px; align-items: center; margin-left: 8px; font-weight: 600; color: var(--text); }
+.del-confirm button { font: inherit; font-size: 12px; border-radius: 6px; padding: 2px 10px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.del-confirm .del-yes { background: #c2410c; border-color: #c2410c; color: #fff; }
+
 /* question index */
 .q-index-tools { display: flex; gap: 14px; align-items: center; font-size: 14px; margin: 8px 0; }
 .q-index td:first-child { white-space: nowrap; }
@@ -300,6 +305,37 @@ button.ghost { font: inherit; font-size: 14px; border: 1px solid var(--border); 
     Object.assign(item, { text, editedBy: editor, editedAt: new Date().toISOString() });
     storage.set(key, JSON.stringify(list));
     return item;
+  }
+
+  async function removeItem(kind, id, editor) {
+    if (state.mode === 'server') {
+      const r = await fetch((kind === 'answers' ? '/api/answers/' : '/api/additions/') + encodeURIComponent(id), { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ editor }) });
+      if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || r.statusText);
+      return;
+    }
+    const key = kind === 'answers' ? LOCAL_KEY : LOCAL_ADD_KEY;
+    let list = [];
+    try { list = JSON.parse(storage.get(key) || '[]'); } catch { /* ignore */ }
+    storage.set(key, JSON.stringify(list.filter((x) => x.id !== id)));
+  }
+
+  // inline "are you sure?" for deleting an addition
+  function confirmDelete(card, item) {
+    if ($('.del-confirm', card)) return;
+    const meta = $('.addition-meta', card);
+    meta.insertAdjacentHTML('beforeend', `<span class="del-confirm">წავშალო? <button type="button" class="del-yes">დიახ, წაშალე</button> <button type="button" class="del-no">არა</button></span>`);
+    $('.del-no', card).addEventListener('click', () => $('.del-confirm', card).remove());
+    $('.del-yes', card).addEventListener('click', async () => {
+      const editor = $('#authorInput').value.trim();
+      if (!editor) { toast('ჯერ ზემოთ ჩაწერეთ თქვენი სახელი'); $('#authorInput').focus(); return; }
+      try {
+        await removeItem('additions', item.id, editor);
+        state.additions = state.additions.filter((a) => a.id !== item.id);
+        renderAdditions();
+        updateCounts();
+        toast('წაიშალა');
+      } catch (err) { toast('ვერ წაიშალა: ' + err.message); }
+    });
   }
 
   function editedNote(a) {
@@ -500,12 +536,13 @@ button.ghost { font: inherit; font-size: 14px; border: 1px solid var(--border); 
       const draft = openForm ? openForm.text.value : null;
       box.innerHTML = list.map((a) => `
         <div class="addition" data-id="${esc(a.id)}">
-          <div class="addition-meta"><span class="addition-tag">დამატებული</span><b>${esc(a.author)}</b> · ${esc(fmtDate(a.createdAt))}${editedNote(a)} <button type="button" class="edit-btn">რედაქტირება</button></div>
+          <div class="addition-meta"><span class="addition-tag">დამატებული</span><b>${esc(a.author)}</b> · ${esc(fmtDate(a.createdAt))}${editedNote(a)} <button type="button" class="edit-btn">რედაქტირება</button> <button type="button" class="edit-btn del-btn">წაშლა</button></div>
           <div class="addition-text item-text">${esc(a.text)}</div>
         </div>`).join('') + `<button type="button" class="add-btn">+ დამატება</button>`;
       $$('.addition', box).forEach((card) => {
         const item = state.additions.find((a) => a.id === card.dataset.id);
         $('.edit-btn', card).addEventListener('click', () => startEdit(card, item, 'additions', renderAdditions));
+        $('.del-btn', card).addEventListener('click', () => confirmDelete(card, item));
       });
       $('.add-btn', box).addEventListener('click', () => openAddForm(box));
       if (draft !== null) openAddForm(box, draft);

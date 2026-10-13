@@ -35,17 +35,28 @@ function rowToItem(kind, r) {
 async function postgresStorage(config) {
   const { default: pg } = await import('pg');
   const pool = new pg.Pool({ ...config, max: 3, ssl: process.env.PGSSLMODE === 'require' ? { rejectUnauthorized: false } : undefined });
+  for (let attempt = 1; ; attempt++) { // the database may still be starting
+    try { await pool.query('SELECT 1'); break; } catch (err) {
+      if (attempt >= 15) throw err;
+      console.warn(`waiting for database (${err.code || err.message}), attempt ${attempt}/15…`);
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
   await pool.query(`
     CREATE TABLE IF NOT EXISTS docs_answers (
       id uuid PRIMARY KEY, question_id text NOT NULL, author text NOT NULL, text text NOT NULL,
       created_at timestamptz NOT NULL DEFAULT now(), edited_by text, edited_at timestamptz);
     CREATE TABLE IF NOT EXISTS docs_additions (
       id uuid PRIMARY KEY, section_id text NOT NULL, section_title text NOT NULL DEFAULT '', author text NOT NULL, text text NOT NULL,
-      created_at timestamptz NOT NULL DEFAULT now(), edited_by text, edited_at timestamptz);`);
+      created_at timestamptz NOT NULL DEFAULT now(), edited_by text, edited_at timestamptz);
+    ALTER TABLE docs_answers ADD COLUMN IF NOT EXISTS deleted_by text;
+    ALTER TABLE docs_answers ADD COLUMN IF NOT EXISTS deleted_at timestamptz;
+    ALTER TABLE docs_additions ADD COLUMN IF NOT EXISTS deleted_by text;
+    ALTER TABLE docs_additions ADD COLUMN IF NOT EXISTS deleted_at timestamptz;`);
   return {
     name: 'postgres',
     async list(kind) {
-      const { rows } = await pool.query(`SELECT * FROM ${COLS[kind].table} ORDER BY created_at, id`);
+      const { rows } = await pool.query(`SELECT * FROM ${COLS[kind].table} WHERE deleted_at IS NULL ORDER BY created_at, id`);
       return rows.map((r) => rowToItem(kind, r));
     },
     async add(kind, item) {
@@ -58,8 +69,13 @@ async function postgresStorage(config) {
     },
     async update(kind, id, text, editor) {
       const { rows } = await pool.query(
-        `UPDATE ${COLS[kind].table} SET text = $2, edited_by = $3, edited_at = now() WHERE id = $1 RETURNING *`, [id, text, editor]);
+        `UPDATE ${COLS[kind].table} SET text = $2, edited_by = $3, edited_at = now() WHERE id = $1 AND deleted_at IS NULL RETURNING *`, [id, text, editor]);
       return rows[0] ? rowToItem(kind, rows[0]) : null;
+    },
+    async remove(kind, id, by) {
+      const { rowCount } = await pool.query(
+        `UPDATE ${COLS[kind].table} SET deleted_by = $2, deleted_at = now() WHERE id = $1 AND deleted_at IS NULL`, [id, by]);
+      return rowCount > 0;
     },
     async close() { await pool.end(); },
   };
@@ -82,14 +98,21 @@ async function fileStorage(dataDir) {
   }).catch((err) => console.error('save failed:', err.message)));
   return {
     name: writable ? 'file: ' + file : 'memory (not persistent)',
-    async list(kind) { return data[kind]; },
+    async list(kind) { return data[kind].filter((x) => !x.deletedAt); },
     async add(kind, item) { data[kind].push(item); await persist(); return item; },
     async update(kind, id, text, editor) {
-      const item = data[kind].find((x) => x.id === id);
+      const item = data[kind].find((x) => x.id === id && !x.deletedAt);
       if (!item) return null;
       Object.assign(item, { text, editedBy: editor, editedAt: new Date().toISOString() });
       await persist();
       return item;
+    },
+    async remove(kind, id, by) {
+      const item = data[kind].find((x) => x.id === id && !x.deletedAt);
+      if (!item) return false;
+      Object.assign(item, { deletedBy: by, deletedAt: new Date().toISOString() });
+      await persist();
+      return true;
     },
     async close() { await chain; },
   };

@@ -153,6 +153,11 @@ button.ghost { font: inherit; font-size: 14px; border: 1px solid var(--border); 
 .edit-actions { display: flex; justify-content: flex-end; gap: 6px; }
 .addition .edit-form .primary { background: var(--add); }
 
+.del-btn:hover { color: #c2410c; }
+.del-confirm { display: inline-flex; gap: 6px; align-items: center; margin-left: 8px; font-weight: 600; color: var(--text); }
+.del-confirm button { font: inherit; font-size: 12px; border-radius: 6px; padding: 2px 10px; cursor: pointer; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.del-confirm .del-yes { background: #c2410c; border-color: #c2410c; color: #fff; }
+
 /* question index */
 .q-index-tools { display: flex; gap: 14px; align-items: center; font-size: 14px; margin: 8px 0; }
 .q-index td:first-child { white-space: nowrap; }

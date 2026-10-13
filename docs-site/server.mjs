@@ -81,6 +81,13 @@ const server = http.createServer(async (req, res) => {
       return item ? send(res, 200, item) : send(res, 404, { error: 'not found' });
     }
 
+    if (edit && req.method === 'DELETE') {
+      const data = await readJson(req);
+      const by = clean(data && data.editor, 80);
+      if (!by) return send(res, 422, { error: 'editor is required' });
+      return (await storage.remove(edit[1], edit[2], by)) ? send(res, 200, { ok: true }) : send(res, 404, { error: 'not found' });
+    }
+
     return send(res, 404, 'Not found', 'text/plain; charset=utf-8');
   } catch (err) {
     console.error(err);
