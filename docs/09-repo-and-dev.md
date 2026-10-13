@@ -10,8 +10,6 @@
 | `icomers-storefront` | Next.js: საჯარო საიტი | `storefront` |
 | `icomers-admin` | Next.js: ადმინ-პანელი | `admin` |
 
-დოკუმენტაცია (ეს ფოლდერი) ცალკე ინახება; დამტკიცების შემდეგ კოდის რეპოები მასზე მიუთითებენ.
-
 ### `icomers-api`
 ```
 icomers-api/
@@ -26,7 +24,6 @@ icomers-api/
 │  ├─ schema.prisma
 │  ├─ migrations/
 │  └─ seed.ts             # სატესტო კატალოგი, ბრენდები, მოდელები
-├─ dev/                   # NATS-ის setup, Billing / Fiscal / Identity mock-ები
 ├─ openapi.json           # API-ს აღწერა (CI განაახლებს); ფრონტები მისგან აგენერირებენ client-ს
 ├─ docker-compose.yml     # ლოკალური ინფრასტრუქტურა
 ├─ Dockerfile
@@ -63,29 +60,8 @@ pnpm api:generate   # openapi-typescript <api-ს openapi.json> -o src/api/schem
 | nats | `nats:2` (`-js` JetStream-ით) | 4222, 8222 (monitoring) |
 | minio | `minio/minio` (ლოკალური S3) | 9000, 9001 (console) |
 | mailpit | `axllent/mailpit` (email-ის ტესტირება) | 1025, 8025 |
-| identity | Keycloak ან კომპანიის Identity-ის dev ინსტანსი | 8080 |
 
-### Mock-ები
-სანამ არსებული სერვისების dev ინსტანსებზე წვდომა არ გვაქვს:
-- `PAYMENT_GATEWAY=mock`: `CreatePayment` აბრუნებს ლოკალურ „ბანკის“ გვერდს (`/dev/fake-bank`), რომელზეც „გადახდა“ / „უარყოფა“ ღილაკები აქვეყნებს `billing.payment.*` ივენთს NATS-ში
-- `FISCAL_GATEWAY=mock`: აბრუნებს ჩეკის ყალბ ნომერს
-- Identity: ლოკალური Keycloak realm (`dev/keycloak/realm.json`) იგივე როლებით
-
-### ბრძანებები
-```bash
-# icomers-api
-docker compose up -d
-cp .env.example .env
-pnpm install
-pnpm prisma migrate dev
-pnpm prisma db seed
-pnpm dev            # api :4000
-pnpm dev:worker     # worker
-
-# icomers-storefront / icomers-admin
-pnpm install
-pnpm dev            # storefront :3000 / admin :3001
-```
+Identity, Billing და Fiscal სერვისებთან დეველოპმენტისას კომპანიის dev გარემო გამოიყენება.
 
 ## 3. კონფიგურაცია და კოდის წესები
 

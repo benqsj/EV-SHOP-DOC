@@ -10,8 +10,6 @@ The code is split into **three separate repos**. Each has its own Dockerfile, CI
 | `icomers-storefront` | Next.js: public site | `storefront` |
 | `icomers-admin` | Next.js: Admin Panel | `admin` |
 
-The documentation (this folder) is kept separately; once approved, the code repos will reference it.
-
 ### `icomers-api`
 ```
 icomers-api/
@@ -26,7 +24,6 @@ icomers-api/
 │  ├─ schema.prisma
 │  ├─ migrations/
 │  └─ seed.ts             # test catalog, brands, models
-├─ dev/                   # NATS setup, Billing / Fiscal / Identity mocks
 ├─ openapi.json           # API description (updated by CI); the frontends generate their client from it
 ├─ docker-compose.yml     # local infrastructure
 ├─ Dockerfile
@@ -63,29 +60,8 @@ The `docker-compose.yml` in `icomers-api` runs the infrastructure. The apps run 
 | nats | `nats:2` (with `-js` JetStream) | 4222, 8222 (monitoring) |
 | minio | `minio/minio` (local S3) | 9000, 9001 (console) |
 | mailpit | `axllent/mailpit` (email testing) | 1025, 8025 |
-| identity | Keycloak or the company Identity dev instance | 8080 |
 
-### Mocks
-Until we have access to dev instances of the existing services:
-- `PAYMENT_GATEWAY=mock`: `CreatePayment` returns a local "bank" page (`/dev/fake-bank`) whose "Pay" / "Decline" buttons publish a `billing.payment.*` event to NATS
-- `FISCAL_GATEWAY=mock`: returns a fake receipt number
-- Identity: a local Keycloak realm (`dev/keycloak/realm.json`) with the same roles
-
-### Commands
-```bash
-# icomers-api
-docker compose up -d
-cp .env.example .env
-pnpm install
-pnpm prisma migrate dev
-pnpm prisma db seed
-pnpm dev            # api :4000
-pnpm dev:worker     # worker
-
-# icomers-storefront / icomers-admin
-pnpm install
-pnpm dev            # storefront :3000 / admin :3001
-```
+During development, the company dev environment is used for the Identity, Billing and Fiscal services.
 
 ## 3. Configuration and code rules
 

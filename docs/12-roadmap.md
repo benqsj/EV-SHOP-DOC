@@ -4,7 +4,7 @@
 
 ### ეტაპი 0 — საფუძველი
 - [ ] სამი რეპო: `icomers-api`, `icomers-storefront`, `icomers-admin` (TS, ESLint, Prettier)
-- [ ] docker-compose: Postgres, NATS, MinIO, Keycloak (dev)
+- [ ] docker-compose: Postgres, NATS, MinIO
 - [ ] NestJS skeleton: config, logging, health, Prisma, OpenAPI
 - [ ] Next.js storefront + admin skeleton, next-intl, Tailwind, shadcn/ui
 - [ ] Auth: OIDC login (BFF) ორივე აპში, JWT guard + roles Nest-ში
@@ -33,7 +33,7 @@
 ### ეტაპი 3 — ფისკალიზაცია, live, შეტყობინებები
 - [ ] Fiscal adapter + consumer, retry, FAILED სტატუსის მართვა
 - [ ] Admin dashboard + SSE live feed
-- [ ] Email/SMS შეტყობინებები (არხის შერჩევის შემდეგ)
+- [ ] Email შეტყობინებები
 - [ ] Audit log, failed events UI
 
 ### ეტაპი 4 — გაშვებისთვის მზადება
@@ -63,16 +63,3 @@
 :::questions-index
 :::
 
-### ზოგადი კითხვები
-
-:::question id="biz-catalog-source" to="ბიზნესი"
-სად ინახება ახლა საწყისი კატალოგი (Excel, 1C, სხვა)? რა ველები აქვს (SKU, სახელი, ფასი, მარაგი, თავსებადი მოდელები, ფოტოები)? დაახლოებით რამდენი პროდუქტია?
-:::
-
-:::question id="biz-charger-models" to="ბიზნესი"
-რომელი დამტენის ბრენდები და მოდელები უნდა იყოს თავსებადობის სიაში? არსებობს მზა სია?
-:::
-
-:::question id="docs-approval" to="ყველა"
-გაქვთ თუ არა დოკუმენტაციასთან დაკავშირებული შენიშვნები ან ცვლილებები, რომლებიც დამტკიცებამდე უნდა გავითვალისწინოთ?
-:::

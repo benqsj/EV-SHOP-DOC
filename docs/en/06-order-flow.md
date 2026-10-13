@@ -51,11 +51,13 @@
 
 When the receipt is issued (at payment or at handover) depends on the answer to the `fiscal-when` question, see [03 §3](03-integrations.md#3-fiscal--rsge).
 
-## 6. Customer notifications (once the channel is decided)
+## 6. Customer notifications
+
+Notifications are sent by email, in the language of the order (`orders.locale`).
 
 | Event | Notification |
 |---|---|
 | `shop.order.paid` | "Order ICM-000123 has been received" + receipt link |
 | `status_changed → READY_FOR_PICKUP` | "Your order is ready for pickup" + address/opening hours |
 | `status_changed → SHIPPED` | "Your order is on its way" |
-| `shop.order.cancelled` | "Your order has been cancelled; the money will be refunded within X days" |
+| `shop.order.cancelled` | "Your order has been cancelled; the money will be refunded to your card" |

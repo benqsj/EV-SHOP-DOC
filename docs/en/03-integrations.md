@@ -75,10 +75,6 @@ What are the **exact subjects and payload schema** of the payment events (succee
 Is `CreatePayment` idempotent? That is, do two calls with the same `idempotency_key` create a single payment?
 :::
 
-:::question id="billing-refund" to="Billing team"
-Are **partial refunds** possible? Roughly how many days does it take for the money to return to the card (to state in the text for customers)?
-:::
-
 :::question id="billing-expiry" to="Billing team"
 After how long is an unpaid payment considered **expired**? The stock reservation timeout depends on this (currently 15 minutes).
 :::
@@ -111,22 +107,16 @@ Should the fiscal receipt be issued **at the moment of payment** or **when the i
 :::
 
 :::question id="fiscal-fields" to="Fiscal team"
-Which fields does `IssueReceipt` require (product codes, units, VAT codes, payment type)? Can we show the customer a receipt link or PDF? Please provide an example.
+Which fields does `IssueReceipt` require (product codes, units, VAT codes, payment type)? Can we show the customer a receipt link or PDF? Send us an example.
 :::
 
 ---
 
-## 4. Notifications (email / SMS)
+## 4. Notifications (email)
 
-Order confirmations and status changes can be delivered to the customer in two ways:
-- **A:** An email/SMS channel is added to the Notification service (centralized, for all company services)
-- **B:** The Worker directly uses an email provider and a Georgian SMS provider
+Order confirmations and status changes are sent to the customer by **email**. The Worker receives the events (`shop.order.paid`, `shop.order.status_changed`, `shop.order.cancelled`) and sends the email through an email provider. Another channel (e.g. SMS) will be added if needed.
 
-In both cases the source is an event: `shop.order.paid`, `shop.order.status_changed`.
-
-:::question id="notif-channel" to="Backend team / Business"
-Which channel should order notifications be sent through (email, SMS, both), and from where: will the Notification service be extended (A), or will the shop use a provider directly (B)?
-:::
+Notification texts: [Order Flow §6](06-order-flow.md#6-customer-notifications).
 
 ---
 
@@ -178,5 +168,3 @@ When the event structure changes, `version` is incremented, and old fields are n
 :::question id="proto-source" to="Backend team"
 Where are the `.proto` contracts of the Identity / Billing / Fiscal services stored, and how do we get access to them (repo, Buf registry)?
 :::
-
-Network connectivity to NATS and company services: see question `platform-company-services` ([Deployment](10-deployment.md#11-to-clarify-with-platform)).

@@ -88,11 +88,3 @@ All filters are **in the URL** (`?category=cables&in_stock=true&attr[connector]=
 - `fetch(..., { next: { tags: ['product:123'] } })` on every API call.
 - **Price and stock** on the product page come from ISR, but in the cart and at checkout they are **always re-checked**.
 
-## 8. Quality
-
-Goals: the "good" range of Core Web Vitals (LCP < 2.5s), keyboard navigation and sufficient contrast (WCAG AA). Analytics is enabled only after cookie consent.
-
-:::question id="biz-analytics" to="Business / Marketing"
-Which analytics should we use: **GA4**, **Plausible**, or something else? Do we need Meta Pixel or other advertising tracking?
-:::
-
