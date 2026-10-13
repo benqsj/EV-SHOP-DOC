@@ -9,8 +9,8 @@
 | დრო | `timestamptz`, UTC. ყველა ცხრილს აქვს `created_at`, `updated_at` |
 | თანხა | `integer`, **თეთრებში** (`*_minor`). ვალუტა `GEL` |
 | ენები | თარგმნადი ტექსტი ინახება `*_translations` ცხრილებში (`locale` = `ka` / `en`) |
-| წაშლა | პროდუქტი არ იშლება, ხდება `ARCHIVED` (შეკვეთებს სჭირდებათ). დანარჩენი: hard delete, სადაც უსაფრთხოა |
-| Snapshot | შეკვეთა ინახავს პროდუქტის სახელს, ფასს და მისამართს **იმ მომენტის მდგომარეობით**. შემდგომი ცვლილებები ძველ შეკვეთებს არ ცვლის |
+| წაშლა | პროდუქტი არ იშლება, არამედ გადადის `ARCHIVED` სტატუსში (ის შეკვეთებს სჭირდება). დანარჩენი: hard delete, სადაც ეს უსაფრთხოა |
+| Snapshot | შეკვეთა ინახავს პროდუქტის სახელს, ფასს და მისამართს **შეკვეთის მომენტის მდგომარეობით**. შემდგომი ცვლილებები ძველ შეკვეთებზე არ აისახება |
 | Extensions | `pgcrypto`, `pg_trgm`, `citext` |
 
 ## 2. დომენები და კავშირები
@@ -26,7 +26,7 @@
 |---|---|---|
 | id | uuid PK | |
 | parent_id | uuid FK → categories, null | ხე (მაგ. „კაბელები“ → „Type 2 კაბელები“) |
-| slug | text UNIQUE | URL-ისთვის, ერთი ორივე ენისთვის (ლათინური) |
+| slug | text UNIQUE | URL-ისთვის; ერთი და იგივე ორივე ენისთვის (ლათინური ასოებით) |
 | sort_order | int | |
 | is_active | bool | |
 
@@ -45,8 +45,8 @@
 | vat_rate_bp | int default 1800 | დღგ basis points-ში (18.00%) |
 | oem_part_numbers | text[] | ქარხნული ნომრები, ძებნისთვის |
 | attributes | jsonb | თავისუფალი მახასიათებლები: `{ "voltage": "400V", "current": "32A", "connector": "Type 2" }` |
-| weight_g | int null | მომავალი მიწოდებისთვის |
-| is_featured | bool | მთავარ გვერდზე |
+| weight_g | int null | მომავალში, მიწოდებისთვის |
+| is_featured | bool | ჩანს მთავარ გვერდზე |
 | created_at, updated_at | timestamptz | |
 
 **`product_translations`**
@@ -76,7 +76,7 @@
 | name | text | მაგ. „Wallbox Pulsar Plus“ |
 | revision | text null | ვერსია / რევიზია / თაობა |
 | power_kw | numeric null | |
-| image_key | text null | რომ მომხმარებელმა ვიზუალურად იცნოს |
+| image_key | text null | რათა მომხმარებელმა მოდელი ვიზუალურად ამოიცნოს |
 | is_active | bool | |
 
 **`product_compatibility`**
@@ -96,12 +96,12 @@
 | სვეტი | ტიპი | შენიშვნა |
 |---|---|---|
 | product_id | uuid PK FK | |
-| on_hand | int | ფიზიკურად საწყობშია |
+| on_hand | int | ფიზიკურად არის საწყობში |
 | reserved | int | დაკავებულია გადაუხდელი შეკვეთებით |
 | low_stock_threshold | int default 2 | |
 | | CHECK | `on_hand >= 0 AND reserved >= 0 AND reserved <= on_hand` |
 
-ხელმისაწვდომი = `on_hand - reserved`.
+ხელმისაწვდომი რაოდენობა = `on_hand - reserved`.
 
 **`stock_movements`** (ledger, მხოლოდ INSERT)
 | სვეტი | ტიპი | შენიშვნა |
@@ -124,7 +124,7 @@
 |---|---|---|
 | id | uuid | |
 | identity_user_id | text UNIQUE | `sub` ტოკენიდან |
-| type | enum `INDIVIDUAL` / `BUSINESS` | `BUSINESS` მოგვიანებით |
+| type | enum `INDIVIDUAL` / `BUSINESS` | `BUSINESS` დაემატება მოგვიანებით |
 | email | citext null | |
 | phone | text null | |
 | first_name, last_name | text | |
@@ -137,11 +137,11 @@
 
 ### კალათა
 
-**`carts`**: `id`, `customer_id` UNIQUE null, `guest_token` UNIQUE null, `updated_at`, `expires_at`. CHECK: ერთ-ერთი მაინც შევსებულია.
+**`carts`**: `id`, `customer_id` UNIQUE null, `guest_token` UNIQUE null, `updated_at`, `expires_at`. CHECK: ერთ-ერთი მაინც უნდა იყოს შევსებული.
 
 **`cart_items`**: `(cart_id, product_id)` PK, `quantity` CHECK > 0, `added_at`
 
-ფასი კალათაში **არ ინახება**. ის ყოველთვის `products`-იდან იკითხება.
+ფასი კალათაში **არ ინახება**: ის ყოველთვის `products`-იდან იკითხება.
 
 ### შეკვეთები
 
@@ -152,7 +152,7 @@
 | number | text UNIQUE | ადამიანისთვის წაკითხვადი: `ICM-000123` (sequence) |
 | customer_id | uuid FK | |
 | status | enum | იხ. [06-order-flow](06-order-flow.md#1-შეკვეთის-სტატუსები) |
-| fulfillment_method | enum `PICKUP` / `DELIVERY` | `DELIVERY` ადმინის მიერ ხელით იმართება |
+| fulfillment_method | enum `PICKUP` / `DELIVERY` | `DELIVERY`-ს ადმინი ხელით მართავს |
 | contact | jsonb | snapshot: სახელი, ტელეფონი, email |
 | shipping_address | jsonb null | snapshot |
 | subtotal_minor | int | |
@@ -161,7 +161,7 @@
 | total_minor | int | |
 | vat_minor | int | ჯამში შემავალი დღგ |
 | currency | char(3) default `GEL` | |
-| locale | text | რა ენაზე გაფორმდა (შეტყობინებებისთვის) |
+| locale | text | რა ენაზე გაფორმდა შეკვეთა (შეტყობინებებისთვის) |
 | customer_note | text null | |
 | internal_note | text null | მხოლოდ ადმინისთვის |
 | placed_at, paid_at, completed_at, cancelled_at | timestamptz null | |
@@ -184,7 +184,7 @@
 |---|---|
 | `outbox_events` | `id`, `aggregate_type`, `aggregate_id`, `event_type`, `payload` jsonb, `created_at`, `published_at` null, `attempts`. ინდექსი: `WHERE published_at IS NULL` |
 | `processed_events` | `(event_id, consumer)` PK, `processed_at`. Idempotent consumer |
-| `failed_events` | ივენთები, რომლებმაც `max_deliver` ამოწურეს |
+| `failed_events` | ივენთები, რომლებმაც `max_deliver` ლიმიტი ამოწურეს |
 | `idempotency_keys` | `key`, `customer_id`, `request_hash`, `response` jsonb, `created_at`. `POST /checkout`-ისთვის |
 | `admin_audit_log` | `id`, `actor_id`, `actor_email`, `action`, `entity_type`, `entity_id`, `diff` jsonb, `ip`, `created_at` |
 
@@ -201,7 +201,7 @@ WHERE p.status = 'ACTIVE'
 ```
 
 ### ძებნა (ქართული + ინგლისური + SKU / OEM)
-ძებნა მუშაობს Postgres-ის full-text search-ით (`simple` კონფიგურაცია) და `pg_trgm`-ით (მსგავსი სიტყვები, შეცდომით აკრეფილი სიტყვები), SKU-ითა და OEM ნომრით.
+ძებნა იყენებს Postgres-ის full-text search-ს (`simple` კონფიგურაცია) და `pg_trgm`-ს (მსგავსი და შეცდომით აკრეფილი სიტყვებისთვის), ასევე ეძებს SKU-ითა და OEM ნომრით.
 
 <details>
 <summary>ტექნიკური დეტალები: ინდექსები და query</summary>

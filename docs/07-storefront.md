@@ -7,7 +7,7 @@
 - API client: `openapi-fetch` + `icomers-api`-ის `openapi.json`-იდან გენერირებული ტიპები
 - Auth: Auth.js (OIDC) ან `openid-client`, BFF pattern (იხ. [03 §1](03-integrations.md#1-identity--oauth2--oidc))
 - ფორმები: react-hook-form + zod
-- Client state: მინიმალური. კალათის რაოდენობა header-ში → TanStack Query ან Server Actions + `revalidatePath`
+- Client state: მინიმალური. header-ში კალათის ნივთების რაოდენობა → TanStack Query ან Server Actions + `revalidatePath`
 
 ## 2. გვერდები (routes)
 
@@ -43,7 +43,7 @@
 ## 3. „ჩემი დამტენი“ (თავსებადობის UX)
 
 1. მთავარ გვერდზე და header-ში: **„აირჩიე შენი დამტენი“** → ბრენდი → მოდელი (სურათებით).
-2. არჩეული მოდელი ინახება **cookie-ში** (`my_charger=<modelId>`); ავტორიზებული მომხმარებლისთვის შეიძლება პროფილშიც შეინახოს (რამდენიმე დამტენი, მომავალში).
+2. არჩეული მოდელი ინახება **cookie-ში** (`my_charger=<modelId>`); ავტორიზებული მომხმარებლისთვის მომავალში შესაძლებელია პროფილშიც შენახვა (რამდენიმე დამტენი).
 3. როცა მოდელი არჩეულია:
    - კატალოგი ავტომატურად იფილტრება (chip: „ნაჩვენებია: Wallbox Pulsar Plus ✕“)
    - პროდუქტის ბარათზე badge: ✅ „ერგება შენს დამტენს“ / ⚠️ „არ ერგება“
@@ -61,14 +61,14 @@
 | დინამიური ატრიბუტები (კონექტორი, დენი, სიგრძე...) | checkbox-ები `/catalog/filters`-იდან, რაოდენობებით |
 | სორტირება | პოპულარული, ფასი ↑↓, ახალი |
 
-ყველა ფილტრი **URL-შია** (`?category=cables&in_stock=true&attr[connector]=Type+2`), რომ ბმულის გაზიარება და უკან დაბრუნება სწორად მუშაობდეს.
+ყველა ფილტრი **URL-შია** (`?category=cables&in_stock=true&attr[connector]=Type+2`), რათა ბმულის გაზიარება და უკან დაბრუნება სწორად მუშაობდეს.
 
 ## 5. i18n
 
 - `ka` ნაგულისხმევია: `/` → `/ka`.
 - UI ტექსტები: `messages/ka.json`, `messages/en.json`.
 - პროდუქტის კონტენტი API-დან მოდის `Accept-Language`-ით.
-- თუ ინგლისური თარგმანი აკლია → ქართული იჩვენება (fallback API-ის მხარეს).
+- თუ ინგლისური თარგმანი აკლია → ნაჩვენებია ქართული (fallback API-ის მხარესაა).
 - ფასის ფორმატი: `Intl.NumberFormat('ka-GE', { style: 'currency', currency: 'GEL' })`.
 - შრიფტი უნდა უჭერდეს მხარს ქართულ ანბანს (მაგ. Noto Sans Georgian, FiraGO, BPG სერია).
 
@@ -86,13 +86,13 @@
 ![Storefront-ის განახლება](diagrams/revalidation.svg)
 
 - `fetch(..., { next: { tags: ['product:123'] } })` თითოეულ API call-ზე.
-- **ფასი და მარაგი** პროდუქტის გვერდზე ISR-დანაა, მაგრამ კალათაში და checkout-ში **ყოველთვის ახლიდან** მოწმდება.
+- **ფასი და მარაგი** პროდუქტის გვერდზე ISR-იდან მოდის, მაგრამ კალათასა და checkout-ში **ყოველთვის თავიდან** მოწმდება.
 
 ## 8. ხარისხი
 
-მიზნები: Core Web Vitals-ის „კარგი“ ზონა (LCP < 2.5s), კლავიატურით ნავიგაცია და საკმარისი კონტრასტი (WCAG AA). ანალიტიკა მხოლოდ cookie consent-ის შემდეგ.
+მიზნები: Core Web Vitals-ის „კარგი“ ზონა (LCP < 2.5s), კლავიატურით ნავიგაცია და საკმარისი კონტრასტი (WCAG AA). ანალიტიკა ირთვება მხოლოდ cookie consent-ის შემდეგ.
 
 :::question id="biz-analytics" to="ბიზნესი / მარკეტინგი"
-რომელი ანალიტიკა გამოვიყენოთ: **GA4**, **Plausible**, თუ სხვა? საჭიროა Meta Pixel / სხვა სარეკლამო tracking?
+რომელი ანალიტიკა გამოვიყენოთ: **GA4**, **Plausible**, თუ სხვა? საჭიროა თუ არა Meta Pixel ან სხვა სარეკლამო tracking?
 :::
 

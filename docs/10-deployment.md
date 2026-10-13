@@ -14,13 +14,13 @@
 | `worker` | `icomers-api` | `worker` | NATS ივენთები, outbox, ჩეკები, cron | — | — (`--private`) |
 | `migrate` | `icomers-api` | `release` | `prisma migrate deploy`, ყოველი deploy-ის წინ | — | — |
 
-- **`release`** აპი ყოველ deploy-ზე **web აპების განახლებამდე** ეშვება. ამიტომ ახალი კოდი ყოველთვის განახლებულ ბაზას ხვდება.
+- **`release`** აპი ყოველ deploy-ზე **web აპების განახლებამდე** ეშვება. ამიტომ ახალი კოდი ყოველთვის უკვე განახლებულ ბაზასთან მუშაობს.
 - **`worker`**-ს HTTP ტრაფიკი არ აქვს და domain არ სჭირდება.
 - Deploy ავტომატურია GitHub push-ზე (`--auto-deploy`). ხელით: `usectl machines deploy icomers`.
 
 ## 2. Dockerfile-ები
 
-ყოველ რეპოს root-ში თავისი `Dockerfile` აქვს, და usectl მას ავტომატურად იყენებს.
+ყოველ რეპოს root-ში თავისი `Dockerfile` აქვს და usectl მას ავტომატურად იყენებს.
 
 | რეპო | Image | usectl აპები |
 |---|---|---|
@@ -86,18 +86,18 @@ CMD ["node", "server.js"]
 | **S3** | S3 addon (managed). პროდუქტის სურათებისთვის public CDN | `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`, `S3_REGION` |
 | **შეცდომები** | GlitchTip (Sentry-თავსებადი) | `SENTRY_DSN` |
 
-- addon თითოეულ აპზე ცალკე უნდა მიება (`attach-addon`). `DATABASE_URL` სჭირდება `api`-ს, `worker`-ს და `migrate`-ს.
-- addon-ის ცვლადები ხელით არ იწერება.
+- addon-ი თითოეულ აპს ცალკე უნდა მიუერთდეს (`attach-addon`). `DATABASE_URL` სჭირდება `api`-ს, `worker`-ს და `migrate`-ს.
+- addon-ის ცვლადები ხელით არ ემატება.
 - S3 client-ში საჭიროა `forcePathStyle: true`.
 
 ## 4. SSE usectl-ზე
 
 ტრაფიკის გზა: ბრაუზერი → **Cloudflare** → **Traefik** → `api`. SSE კავშირი დიდხანს რჩება ღია. მის შესანარჩუნებლად:
-- სერვერი ყოველ 15 წამში აგზავნის heartbeat-ს. Cloudflare უმოქმედო კავშირს ~100 წამში თიშავს, და heartbeat ამას აცილებს.
+- სერვერი ყოველ 15 წამში აგზავნის heartbeat-ს. Cloudflare უმოქმედო კავშირს ~100 წამში თიშავს, heartbeat კი ამას თავიდან აგვაცილებს.
 - პასუხს აქვს `Cache-Control: no-cache` და `X-Accel-Buffering: no`.
 - კავშირის გაწყვეტისას კლიენტი ხელახლა უერთდება და REST-ით ამოწმებს მონაცემებს (იხ. [SSE-ის წესები](02-architecture.md#sse-ის-წესები)).
 
-usectl-ის დოკუმენტაცია SSE-ს ცალკე არ აღწერს, ამიტომ staging-ზე შემოწმდება (კითხვა `usectl-sse`).
+usectl-ის დოკუმენტაცია SSE-ს ცალკე არ აღწერს, ამიტომ ეს staging-ზე უნდა შემოწმდეს (კითხვა `usectl-sse`).
 
 ## 5. Env ცვლადები და secrets
 
@@ -112,7 +112,7 @@ usectl-ის დოკუმენტაცია SSE-ს ცალკე ა�
 
 DNS-ში `CNAME → custom.usectl.com`, შემდეგ `usectl domains verify` და `attach-app` შესაბამის აპზე. TLS სერტიფიკატს Cloudflare ავტომატურად გასცემს.
 
-`*.usectl.com` მისამართზე (staging-ისთვის) გამოიყენება მხოლოდ **ერთდონიანი** სახელი, მაგ. `icomers-api.usectl.com`. `api.icomers.usectl.com`-ის მსგავსი მრავალდონიანი სახელისთვის Cloudflare სერტიფიკატს ვერ გასცემს, და ბრაუზერი აჩვენებს `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`-ს.
+`*.usectl.com` მისამართზე (staging-ისთვის) გამოიყენება მხოლოდ **ერთდონიანი** სახელი, მაგ. `icomers-api.usectl.com`. `api.icomers.usectl.com`-ის მსგავსი მრავალდონიანი სახელისთვის Cloudflare სერტიფიკატს ვერ გასცემს და ბრაუზერი აჩვენებს `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`-ს.
 
 ## 7. გარემოები
 
@@ -129,7 +129,7 @@ PR preview გარემოები თავიდან გამორთ�
 | Endpoint | რას ამოწმებს |
 |---|---|
 | `/health/live` | პროცესი ცოცხალია |
-| `/health/ready` | Postgres და NATS კავშირი. კომპანიის მიკროსერვისები არ მოწმდება, რომ მათი დროებითი გათიშვისას კატალოგი მაინც მუშაობდეს |
+| `/health/ready` | Postgres და NATS კავშირი. კომპანიის მიკროსერვისები არ მოწმდება, რათა მათი დროებითი გათიშვისას კატალოგი მაინც მუშაობდეს |
 
 - `storefront` და `api`: 2+ replica, ავტოსკალირება (usectl მხოლოდ web აპებს ასკალირებს).
 - `worker`: 1–2 replica. Outbox რამდენიმე replica-ზეც უსაფრთხოდ მუშაობს.
@@ -142,7 +142,7 @@ PR preview გარემოები თავიდან გამორთ�
 | რა | სად |
 |---|---|
 | ლოგები | Loki: `usectl machines logs icomers api -f` |
-| Metrics | მოთხოვნები, p95, 5xx, CPU და მეხსიერება. ჩვენი `/metrics` (outbox backlog, failed events) usectl-ის მხარდაჭერის ჩართვის შემდეგ |
+| Metrics | მოთხოვნები, p95, 5xx, CPU და მეხსიერება. ჩვენი `/metrics` (outbox backlog, failed events) — მას შემდეგ, რაც usectl მის მხარდაჭერას ჩართავს |
 | Tracing | OpenTelemetry → Tempo (HTTP, gRPC და NATS) |
 | შეცდომები | GlitchTip (`SENTRY_DSN`), ფრონტიც და ბექიც |
 | Alert-ები | Slack ან webhook (email არ მუშაობს): 5xx %, p95, crash loop, OOM, ჩავარდნილი ჩეკები |

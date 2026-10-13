@@ -10,7 +10,7 @@
 | `icomers-storefront` | Next.js: საჯარო საიტი | `storefront` |
 | `icomers-admin` | Next.js: ადმინ-პანელი | `admin` |
 
-დოკუმენტაცია (ეს ფოლდერი) ცალკეა და დამტკიცების შემდეგ კოდის რეპოებში მითითებით გამოიყენება.
+დოკუმენტაცია (ეს ფოლდერი) ცალკე ინახება; დამტკიცების შემდეგ კოდის რეპოები მასზე მიუთითებენ.
 
 ### `icomers-api`
 ```
@@ -47,7 +47,7 @@ icomers-storefront/
 ადმინს იგივე სტრუქტურა აქვს.
 
 ### როგორ იღებს ფრონტი API-ს ტიპებს
-`icomers-api`-ს CI ყოველ ცვლილებაზე განაახლებს `openapi.json`-ს. ფრონტის რეპოში ერთი ბრძანება აგენერირებს ტიპებს:
+`icomers-api`-ის CI ყოველი ცვლილებისას განაახლებს `openapi.json`-ს. ფრონტის რეპოში ერთი ბრძანება აგენერირებს ტიპებს:
 ```bash
 pnpm api:generate   # openapi-typescript <api-ს openapi.json> -o src/api/schema.ts
 ```
@@ -68,7 +68,7 @@ pnpm api:generate   # openapi-typescript <api-ს openapi.json> -o src/api/schem
 ### Mock-ები
 სანამ არსებული სერვისების dev ინსტანსებზე წვდომა არ გვაქვს:
 - `PAYMENT_GATEWAY=mock`: `CreatePayment` აბრუნებს ლოკალურ „ბანკის“ გვერდს (`/dev/fake-bank`), რომელზეც „გადახდა“ / „უარყოფა“ ღილაკები აქვეყნებს `billing.payment.*` ივენთს NATS-ში
-- `FISCAL_GATEWAY=mock`: აბრუნებს ყალბ ჩეკის ნომერს
+- `FISCAL_GATEWAY=mock`: აბრუნებს ჩეკის ყალბ ნომერს
 - Identity: ლოკალური Keycloak realm (`dev/keycloak/realm.json`) იგივე როლებით
 
 ### ბრძანებები
@@ -106,9 +106,9 @@ pnpm dev            # storefront :3000 / admin :3001
 | `CORS_ORIGINS` | `http://localhost:3000,http://localhost:3001` |
 | `LOG_LEVEL` | `info` |
 
-Next.js აპებს: `API_URL`, `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL`, `REVALIDATE_SECRET`.
+Next.js აპებისთვის: `API_URL`, `OIDC_ISSUER`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`, `SESSION_SECRET`, `NEXT_PUBLIC_SITE_URL`, `REVALIDATE_SECRET`.
 
-Config ვალიდირდება გაშვებისას (zod / `@nestjs/config`). არასწორი config-ის შემთხვევაში აპი არ ჩაირთვება.
+Config ვალიდირდება გაშვებისას (zod / `@nestjs/config`). არასწორი config-ის შემთხვევაში აპი არ გაეშვება.
 
 </details>
 
@@ -120,7 +120,7 @@ Config ვალიდირდება გაშვებისას (zod / `
 - Conventional Commits (`feat:`, `fix:`, `docs:`...)
 - ბიზნეს-ლოგიკა service-ებშია, controller-ები თხელია
 - ყველა DTO აღწერილია `@nestjs/swagger` დეკორატორებით, რომ OpenAPI სრული იყოს
-- ფული მხოლოდ `*_minor` integer-ებით. ფორმატირება ერთი დამხმარე ფუნქციით
+- ფული ინახება მხოლოდ `*_minor` integer-ებით; ფორმატირება ხდება ერთი დამხმარე ფუნქციით
 
 </details>
 
@@ -133,7 +133,7 @@ Config ვალიდირდება გაშვებისას (zod / `
 | Contract | gRPC mock სერვერები | Billing/Fiscal adapter-ები |
 | E2E | **Playwright** | კატალოგი → კალათა → checkout → (mock) გადახდა → შეკვეთა PAID; admin: სტატუსის შეცვლა |
 
-**სავალდებულო ტესტი:** 10 პარალელური checkout ერთსა და იმავე ბოლო ერთეულზე → მხოლოდ 1 უნდა გავიდეს.
+**სავალდებულო ტესტი:** 10 პარალელური checkout ერთსა და იმავე ბოლო ერთეულზე → წარმატებით მხოლოდ 1 უნდა დასრულდეს.
 
 ## 5. CI
 
@@ -141,6 +141,6 @@ Config ვალიდირდება გაშვებისას (zod / `
 
 | ეტაპი | რა მოწმდება |
 |---|---|
-| Pull request | lint, typecheck, ტესტები, build. `icomers-api`-ში დამატებით: Prisma სქემის შემოწმება და OpenAPI-ს breaking change-ის გაფრთხილება |
+| Pull request | lint, typecheck, ტესტები, build. `icomers-api`-ში დამატებით: Prisma სქემის შემოწმება და OpenAPI-ის breaking change-ებზე გაფრთხილება |
 | Merge `develop`-ში | usectl ავტომატურად აწყობს და აახლებს staging-ს |
 | Merge `main`-ში | production |

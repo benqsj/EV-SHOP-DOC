@@ -9,15 +9,15 @@
 | ენა | **TypeScript** (Node.js 24 LTS) | ერთი ენა ფრონტსა და ბექზე, საერთო ტიპები |
 | Storefront | **Next.js** (App Router), Tailwind CSS, next-intl | SEO: გვერდები სერვერზე რენდერდება; ISR: კატალოგი cache-დან იხსნება და პროდუქტის შეცვლისას ახლდება; ka / en |
 | Admin Panel | **Next.js**, shadcn/ui, TanStack Query + Table | იგივე ტექნოლოგია, რაც storefront-ში; მზა ცხრილები, ფორმები და cache |
-| Backend | **NestJS** | gRPC client ჩაშენებულია; მოდულები და DI მკაფიო სტრუქტურას იძლევა; `@nestjs/swagger`-ით OpenAPI ავტომატურად |
+| Backend | **NestJS** | gRPC client ჩაშენებულია; მოდულები და DI მკაფიო სტრუქტურას იძლევა; `@nestjs/swagger`-ით OpenAPI ავტომატურად გენერირდება |
 | Worker | იგივე NestJS კოდი, ცალკე პროცესი | ფონური სამუშაო (ივენთები, ჩეკები, cron) HTTP API-ს არ ანელებს |
-| API | **REST + OpenAPI**, ველები `snake_case` | ნაცნობია; Swagger UI ტესტირებისთვის; კომპანიის სხვა API-ების კონვენცია |
+| API | **REST + OpenAPI**, ველები `snake_case` | ნაცნობი მიდგომაა; Swagger UI ტესტირებისთვის; კომპანიის სხვა API-ების კონვენცია |
 | API client | **openapi-typescript + openapi-fetch** | ფრონტის ტიპები backend-ის კოდიდან გენერირდება, ხელით არ იწერება (იხ. [REST API](05-api.md#5-ფრონტის-api-client)) |
 | Database | **PostgreSQL 16+** | ტრანზაქციები (შეკვეთა + მარაგი ერთად); JSONB მახასიათებლებისთვის; full-text search და `pg_trgm` |
 | ORM | **Prisma** | ტიპიზებული client, მიგრაციები, Prisma Studio; საჭიროებისას raw SQL |
 | gRPC | `@grpc/grpc-js` + Buf + ts-proto | `.proto` კონტრაქტიდან TypeScript client-ები |
-| Messaging | **NATS JetStream** (nats.js) | კომპანიის სერვისები უკვე იყენებენ (Billing); ივენთები ინახება და არ იკარგება; dedupe და retry |
-| Real-time | **SSE** | მხოლოდ სერვერი → ბრაუზერი მიმართულება გვჭირდება; ჩვეულებრივი HTTP |
+| Messaging | **NATS JetStream** (nats.js) | კომპანიის სერვისები უკვე იყენებს (Billing); ივენთები ინახება და არ იკარგება; dedupe და retry |
+| Real-time | **SSE** | გვჭირდება მხოლოდ სერვერი → ბრაუზერი მიმართულება; მუშაობს ჩვეულებრივ HTTP-ზე |
 | ფაილები | S3 (usectl-ის S3 addon) | პროდუქტის სურათები, ატვირთვა პირდაპირ ადმინიდან (presigned URL) |
 | რეპოები | 3 ცალკე რეპო (api, storefront, admin), pnpm | კომპანიის სტილი; დამოუკიდებელი deploy; ტიპები OpenAPI-დან გენერირდება ([Repo & Dev](09-repo-and-dev.md#1-რეპოზიტორიები)) |
 | ტესტები | Vitest / Jest, Testcontainers, Playwright | რეალური Postgres და NATS ტესტებში; E2E ბრაუზერში |

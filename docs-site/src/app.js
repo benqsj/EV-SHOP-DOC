@@ -2,15 +2,56 @@
 (() => {
   'use strict';
 
-  const GROUPS = [
-    { title: 'შესავალი', docs: ['00-overview', '01-tech-stack'] },
-    { title: 'არქიტექტურა', docs: ['02-architecture', '03-integrations'] },
-    { title: 'Backend', docs: ['04-data-model', '05-api', '06-order-flow'] },
-    { title: 'Frontend', docs: ['07-storefront', '08-admin-panel'] },
-    { title: 'DevOps და უსაფრთხოება', docs: ['09-repo-and-dev', '10-deployment', '11-security'] },
-    { title: 'გეგმა', docs: ['12-roadmap'] },
+  const I18N = {
+    ka: {
+      groups: ['შესავალი', 'არქიტექტურა', 'Backend', 'Frontend', 'DevOps და უსაფრთხოება', 'გეგმა'],
+      brandSub: 'ტექნიკური დოკუმენტაცია', status: 'დასამტკიცებელი', yourName: 'თქვენი სახელი', namePh: 'მაგ. გიორგი (Billing)',
+      navFilter: 'ძებნა სარჩევში…', download: '⬇ პასუხების და დამატებების ჩამოტვირთვა',
+      introTitle: 'icomers — ონლაინ მაღაზია',
+      introText: 'კომპანიის საკუთარი პროდუქციის (EV დამტენების ნაწილები და აქსესუარები) ონლაინ მაღაზიის არქიტექტურა და ტექნიკური დოკუმენტაცია: backend, frontend, admin panel, API, ინტეგრაციები და deploy.',
+      notFound: 'ვერ მოიძებნა', delAsk: 'წავშალო?', delYes: 'დიახ, წაშალე', no: 'არა', needName: 'ჯერ ზემოთ ჩაწერეთ თქვენი სახელი',
+      deleted: 'წაიშალა', deleteFailed: 'ვერ წაიშალა: ', edited: 'შეცვლილია', cancel: 'გაუქმება', save: 'შენახვა', saved: 'შენახულია ✓',
+      saveFailed: 'ვერ შეინახა: ', answered: 'პასუხგაცემული', openQ: 'ღია კითხვა', to: 'ადრესატი', edit: 'რედაქტირება', del: 'წაშლა',
+      addComment: 'დაამატეთ კომენტარი ან დაზუსტება…', writeAnswer: 'დაწერეთ პასუხი…', sendBy: 'პასუხს გააგზავნის', nameFirst: '— ჩაწერეთ სახელი ზემოთ',
+      send: 'გაგზავნა', answerSaved: 'პასუხი შენახულია ✓', onlyOpen: 'მხოლოდ ღია კითხვები', thStatus: 'სტატუსი', thQuestion: 'კითხვა',
+      thTo: 'ადრესატი', thDoc: 'თავი', chipAnswer: 'პასუხი', chipOpen: 'ღია', allAnswered: 'ყველა კითხვას პასუხი აქვს 🎉',
+      added: 'დამატებული', addBtn: '+ დამატება', newItem: 'ახალი პუნქტი', addPh: 'რა აკლია, რა უნდა შეიცვალოს, ან რა გინდათ, რომ დაემატოს…',
+      author: 'ავტორი', add: 'დამატება', addedOk: 'დამატებულია ✓', exportTitle: 'icomers — კითხვები და პასუხები', downloadedAt: 'ჩამოტვირთულია',
+      addedItems: 'დამატებული პუნქტები', answersCount: 'პასუხი', openCount: 'ღია კითხვები', addsCount: 'დამატებული პუნქტები',
+      modeLocal: 'პასუხები ინახება ამ ბრაუზერში', modeServer: 'პასუხები ინახება სერვერზე',
+    },
+    en: {
+      groups: ['Introduction', 'Architecture', 'Backend', 'Frontend', 'DevOps and security', 'Plan'],
+      brandSub: 'Technical documentation', status: 'Pending approval', yourName: 'Your name', namePh: 'e.g. Giorgi (Billing)',
+      navFilter: 'Search contents…', download: '⬇ Download answers and additions',
+      introTitle: 'icomers — online shop',
+      introText: "Architecture and technical documentation of the online shop for the company's own products (EV charger parts and accessories): backend, frontend, admin panel, API, integrations and deployment.",
+      notFound: 'Not found', delAsk: 'Delete?', delYes: 'Yes, delete', no: 'No', needName: 'Please enter your name at the top first',
+      deleted: 'Deleted', deleteFailed: 'Could not delete: ', edited: 'edited', cancel: 'Cancel', save: 'Save', saved: 'Saved ✓',
+      saveFailed: 'Could not save: ', answered: 'Answered', openQ: 'Open question', to: 'For', edit: 'Edit', del: 'Delete',
+      addComment: 'Add a comment or clarification…', writeAnswer: 'Write your answer…', sendBy: 'Answering as', nameFirst: '— enter your name at the top',
+      send: 'Send', answerSaved: 'Answer saved ✓', onlyOpen: 'Open questions only', thStatus: 'Status', thQuestion: 'Question',
+      thTo: 'For', thDoc: 'Section', chipAnswer: 'Answered', chipOpen: 'Open', allAnswered: 'All questions are answered 🎉',
+      added: 'Added', addBtn: '+ Add', newItem: 'New item', addPh: 'What is missing, what should change, or what should be added…',
+      author: 'Author', add: 'Add', addedOk: 'Added ✓', exportTitle: 'icomers — questions and answers', downloadedAt: 'Downloaded',
+      addedItems: 'Added items', answersCount: 'answered', openCount: 'Open questions', addsCount: 'Added items',
+      modeLocal: 'Answers are stored in this browser', modeServer: 'Answers are stored on the server',
+    },
+  };
+  const LANG = (() => {
+    let l = new URLSearchParams(location.search).get('lang');
+    if (!l) { try { l = localStorage.getItem('lang'); } catch { /* ignore */ } }
+    return l === 'en' ? 'en' : 'ka';
+  })();
+  const t = (k) => I18N[LANG][k] ?? I18N.ka[k] ?? k;
+  const DOC_GROUPS = [
+    ['00-overview', '01-tech-stack'], ['02-architecture', '03-integrations'], ['04-data-model', '05-api', '06-order-flow'],
+    ['07-storefront', '08-admin-panel'], ['09-repo-and-dev', '10-deployment', '11-security'], ['12-roadmap'],
   ];
-  const CONTENT = window.ICOMERS_DOCS || { docs: {}, diagrams: {} };
+  const GROUPS = DOC_GROUPS.map((docs, i) => ({ title: t('groups')[i], docs }));
+  const CONTENT = window.ICOMERS_DOCS || { docs: { ka: {}, en: {} }, diagrams: { ka: {}, en: {} } };
+  const DOCS = Object.keys(CONTENT.docs[LANG] || {}).length ? CONTENT.docs[LANG] : CONTENT.docs.ka;
+  const DIAGRAMS = { ...CONTENT.diagrams.ka, ...(LANG === 'en' ? CONTENT.diagrams.en : {}) };
   const LOCAL_KEY = 'icomers-answers';
 
   const $ = (s, el = document) => el.querySelector(s);
@@ -62,7 +103,7 @@
     let list = [];
     try { list = JSON.parse(storage.get(key) || '[]'); } catch { /* ignore */ }
     const item = list.find((x) => x.id === id);
-    if (!item) throw new Error('ვერ მოიძებნა');
+    if (!item) throw new Error(t('notFound'));
     Object.assign(item, { text, editedBy: editor, editedAt: new Date().toISOString() });
     storage.set(key, JSON.stringify(list));
     return item;
@@ -84,23 +125,23 @@
   function confirmDelete(card, item) {
     if ($('.del-confirm', card)) return;
     const meta = $('.addition-meta', card);
-    meta.insertAdjacentHTML('beforeend', `<span class="del-confirm">წავშალო? <button type="button" class="del-yes">დიახ, წაშალე</button> <button type="button" class="del-no">არა</button></span>`);
+    meta.insertAdjacentHTML('beforeend', `<span class="del-confirm">${t('delAsk')} <button type="button" class="del-yes">${t('delYes')}</button> <button type="button" class="del-no">${t('no')}</button></span>`);
     $('.del-no', card).addEventListener('click', () => $('.del-confirm', card).remove());
     $('.del-yes', card).addEventListener('click', async () => {
       const editor = $('#authorInput').value.trim();
-      if (!editor) { toast('ჯერ ზემოთ ჩაწერეთ თქვენი სახელი'); $('#authorInput').focus(); return; }
+      if (!editor) { toast(t('needName')); $('#authorInput').focus(); return; }
       try {
         await removeItem('additions', item.id, editor);
         state.additions = state.additions.filter((a) => a.id !== item.id);
         renderAdditions();
         updateCounts();
-        toast('წაიშალა');
-      } catch (err) { toast('ვერ წაიშალა: ' + err.message); }
+        toast(t('deleted'));
+      } catch (err) { toast(t('deleteFailed') + err.message); }
     });
   }
 
   function editedNote(a) {
-    return a.editedAt ? ` · <span class="edited">შეცვლილია${a.editedBy ? ` (${esc(a.editedBy)})` : ''} ${esc(fmtDate(a.editedAt))}</span>` : '';
+    return a.editedAt ? ` · <span class="edited">${t('edited')}${a.editedBy ? ` (${esc(a.editedBy)})` : ''} ${esc(fmtDate(a.editedAt))}</span>` : '';
   }
 
   // inline editor for an answer / addition text block
@@ -111,7 +152,7 @@
     textEl.insertAdjacentHTML('afterend', `
       <form class="edit-form">
         <textarea name="text" required maxlength="5000"></textarea>
-        <div class="edit-actions"><button type="button" class="ghost">გაუქმება</button> <button class="primary" type="submit">შენახვა</button></div>
+        <div class="edit-actions"><button type="button" class="ghost">${t('cancel')}</button> <button class="primary" type="submit">${t('save')}</button></div>
       </form>`);
     const form = $('.edit-form', container);
     form.text.value = item.text;
@@ -121,14 +162,14 @@
       e.preventDefault();
       const editor = $('#authorInput').value.trim();
       const text = form.text.value.trim();
-      if (!editor) { toast('ჯერ ზემოთ ჩაწერეთ თქვენი სახელი'); $('#authorInput').focus(); return; }
+      if (!editor) { toast(t('needName')); $('#authorInput').focus(); return; }
       if (!text) return;
       try {
         const updated = await updateItem(kind, item.id, text, editor);
         Object.assign(item, updated);
         after();
-        toast('შენახულია ✓');
-      } catch (err) { toast('ვერ შეინახა: ' + err.message); }
+        toast(t('saved'));
+      } catch (err) { toast(t('saveFailed') + err.message); }
     });
   }
 
@@ -161,12 +202,40 @@
     return md;
   }
 
+  function kaSectionIds(docId) {
+    const md = CONTENT.docs.ka[docId];
+    if (!md) return [];
+    const tmp = document.createElement('div');
+    tmp.innerHTML = marked.parse(preprocess(md), { gfm: true });
+    return $$('h2', tmp).map((h) => `${docId}--${slug(h.textContent)}`);
+  }
+
+  function applyStaticI18n() {
+    document.documentElement.lang = LANG;
+    document.title = LANG === 'en' ? 'icomers — documentation' : 'icomers — დოკუმენტაცია';
+    $$('[data-i18n]').forEach((el) => { el.textContent = t(el.dataset.i18n); });
+    $('#authorInput').placeholder = t('namePh');
+    $('#navFilter').placeholder = t('navFilter');
+    $$('.lang-switch button').forEach((b) => {
+      b.classList.toggle('active', b.dataset.lang === LANG);
+      b.addEventListener('click', () => {
+        if (b.dataset.lang === LANG) return;
+        try { localStorage.setItem('lang', b.dataset.lang); } catch { /* ignore */ }
+        const doc = $('.nav-doc.active')?.dataset.doc;
+        const url = new URL(location.href);
+        url.searchParams.set('lang', b.dataset.lang);
+        url.hash = doc ? '#' + doc : '';
+        location.href = url.toString();
+      });
+    });
+  }
+
   function renderDocs() {
     const order = GROUPS.flatMap((g) => g.docs.map((d) => ({ id: d, group: g.title })));
     const host = $('#docs');
     host.innerHTML = '';
     order.forEach((d) => {
-      const text = CONTENT.docs[d.id];
+      const text = DOCS[d.id];
       if (!text) return;
       const sec = document.createElement('section');
       sec.className = 'doc';
@@ -189,16 +258,18 @@
         const name = img.getAttribute('src').replace(/^diagrams\/|\.svg$/g, '');
         const fig = document.createElement('figure');
         fig.className = 'diagram';
-        fig.innerHTML = (CONTENT.diagrams[name] || '') + (img.alt ? `<figcaption>${esc(img.alt)}</figcaption>` : '');
+        fig.innerHTML = (DIAGRAMS[name] || '') + (img.alt ? `<figcaption>${esc(img.alt)}</figcaption>` : '');
         (img.closest('p') || img).replaceWith(fig);
       });
       // "+ დამატება" block at the end of every h2 section
-      $$('h2', sec).forEach((h) => {
+      // additions are keyed by the Georgian section id, so both languages share them
+      const kaIds = LANG === 'ka' ? null : kaSectionIds(d.id);
+      $$('h2', sec).forEach((h, i) => {
         let end = h.nextElementSibling;
         while (end && end.tagName !== 'H2') end = end.nextElementSibling;
         const box = document.createElement('div');
         box.className = 'add-block';
-        box.dataset.section = h.id;
+        box.dataset.section = (kaIds && kaIds[i]) || h.id;
         box.dataset.title = `${d.title} → ${h.textContent.replace(/#$/, '')}`;
         sec.insertBefore(box, end);
       });
@@ -222,21 +293,21 @@
     el.id = `q-${q.id}`;
     el.innerHTML = `
       <div class="q-head">
-        <span class="q-chip ${ans.length ? 'done' : 'open'}">${ans.length ? 'პასუხგაცემული' : 'ღია კითხვა'}</span>
+        <span class="q-chip ${ans.length ? 'done' : 'open'}">${ans.length ? t('answered') : t('openQ')}</span>
         <a class="q-id" href="#q-${esc(q.id)}">${esc(q.id)}</a>
-        <span class="q-to">ადრესატი: <b>${esc(q.to)}</b></span>
+        <span class="q-to">${t('to')}: <b>${esc(q.to)}</b></span>
       </div>
       <div class="q-text">${marked.parse(qText(q))}</div>
       <div class="q-answers">${ans.map((a) => `
         <div class="q-answer" data-id="${esc(a.id)}">
-          <div class="q-answer-meta"><b>${esc(a.author)}</b> · ${esc(fmtDate(a.createdAt))}${editedNote(a)} <button type="button" class="edit-btn">რედაქტირება</button></div>
+          <div class="q-answer-meta"><b>${esc(a.author)}</b> · ${esc(fmtDate(a.createdAt))}${editedNote(a)} <button type="button" class="edit-btn">${t('edit')}</button></div>
           <div class="q-answer-text item-text">${esc(a.text)}</div>
         </div>`).join('')}</div>
       <form class="q-form">
-        <textarea name="text" placeholder="${ans.length ? 'დაამატეთ კომენტარი ან დაზუსტება…' : 'დაწერეთ პასუხი…'}" maxlength="5000" required></textarea>
+        <textarea name="text" placeholder="${ans.length ? t('addComment') : t('writeAnswer')}" maxlength="5000" required></textarea>
         <div class="q-form-row">
-          <span class="q-form-hint">პასუხს გააგზავნის: <b class="q-author">${esc(storage.get('author') || '— ჩაწერეთ სახელი ზემოთ')}</b></span>
-          <button class="primary" type="submit">გაგზავნა</button>
+          <span class="q-form-hint">${t('sendBy')}: <b class="q-author">${esc(storage.get('author') || t('nameFirst'))}</b></span>
+          <button class="primary" type="submit">${t('send')}</button>
         </div>
       </form>`;
     $('.q-form textarea', el).value = draft;
@@ -252,7 +323,7 @@
     const form = e.currentTarget;
     const author = $('#authorInput').value.trim();
     const text = form.text.value.trim();
-    if (!author) { toast('ჯერ ზემოთ ჩაწერეთ თქვენი სახელი'); $('#authorInput').focus(); return; }
+    if (!author) { toast(t('needName')); $('#authorInput').focus(); return; }
     if (!text) return;
     const btn = $('button', form);
     btn.disabled = true;
@@ -260,9 +331,9 @@
       state.answers.push(await store.add(q.id, author, text));
       form.text.value = '';
       refreshAll();
-      toast('პასუხი შენახულია ✓');
+      toast(t('answerSaved'));
     } catch (err) {
-      toast('ვერ შეინახა: ' + err.message);
+      toast(t('saveFailed') + err.message);
       btn.disabled = false;
     }
   }
@@ -273,18 +344,18 @@
     const onlyOpen = storage.get('onlyOpen') === '1';
     const rows = state.questions.filter((q) => !onlyOpen || !answersFor(q.id).length);
     host.innerHTML = `
-      <div class="q-index-tools"><label><input type="checkbox" id="onlyOpen" ${onlyOpen ? 'checked' : ''}> მხოლოდ ღია კითხვები</label></div>
+      <div class="q-index-tools"><label><input type="checkbox" id="onlyOpen" ${onlyOpen ? 'checked' : ''}> ${t('onlyOpen')}</label></div>
       <div class="table-wrap"><table class="q-index">
-        <thead><tr><th>სტატუსი</th><th>კითხვა</th><th>ადრესატი</th><th>თავი</th></tr></thead>
+        <thead><tr><th>${t('thStatus')}</th><th>${t('thQuestion')}</th><th>${t('thTo')}</th><th>${t('thDoc')}</th></tr></thead>
         <tbody>${rows.map((q) => {
           const n = answersFor(q.id).length;
           const text = qText(q).replace(/[*`]/g, '');
           return `<tr>
-            <td><span class="q-chip ${n ? 'done' : 'open'}">${n ? 'პასუხი' : 'ღია'}</span></td>
+            <td><span class="q-chip ${n ? 'done' : 'open'}">${n ? t('chipAnswer') : t('chipOpen')}</span></td>
             <td><a href="#q-${esc(q.id)}">${esc(text.length > 140 ? text.slice(0, 140) + '…' : text)}</a></td>
             <td>${esc(q.to)}</td>
             <td><a href="#${q.doc}">${esc(q.docTitle)}</a></td></tr>`;
-        }).join('') || '<tr><td colspan="4">ყველა კითხვას პასუხი აქვს 🎉</td></tr>'}</tbody>
+        }).join('') || `<tr><td colspan="4">${t('allAnswered')}</td></tr>`}</tbody>
       </table></div>`;
     $('#onlyOpen').addEventListener('change', (e) => { storage.set('onlyOpen', e.target.checked ? '1' : '0'); renderIndex(); });
   }
@@ -297,9 +368,9 @@
       const draft = openForm ? openForm.text.value : null;
       box.innerHTML = list.map((a) => `
         <div class="addition" data-id="${esc(a.id)}">
-          <div class="addition-meta"><span class="addition-tag">დამატებული</span><b>${esc(a.author)}</b> · ${esc(fmtDate(a.createdAt))}${editedNote(a)} <button type="button" class="edit-btn">რედაქტირება</button> <button type="button" class="edit-btn del-btn">წაშლა</button></div>
+          <div class="addition-meta"><span class="addition-tag">${t('added')}</span><b>${esc(a.author)}</b> · ${esc(fmtDate(a.createdAt))}${editedNote(a)} <button type="button" class="edit-btn">${t('edit')}</button> <button type="button" class="edit-btn del-btn">${t('del')}</button></div>
           <div class="addition-text item-text">${esc(a.text)}</div>
-        </div>`).join('') + `<button type="button" class="add-btn">+ დამატება</button>`;
+        </div>`).join('') + `<button type="button" class="add-btn">${t('addBtn')}</button>`;
       $$('.addition', box).forEach((card) => {
         const item = state.additions.find((a) => a.id === card.dataset.id);
         $('.edit-btn', card).addEventListener('click', () => startEdit(card, item, 'additions', renderAdditions));
@@ -316,22 +387,22 @@
     if ($('form.add-form', box)) return;
     box.insertAdjacentHTML('beforeend', `
       <form class="add-form">
-        <div class="add-form-title">ახალი პუნქტი: <b>${esc(box.dataset.title)}</b></div>
-        <textarea name="text" required maxlength="5000" placeholder="რა აკლია, რა უნდა შეიცვალოს, ან რა გინდათ, რომ დაემატოს…"></textarea>
+        <div class="add-form-title">${t('newItem')}: <b>${esc(box.dataset.title)}</b></div>
+        <textarea name="text" required maxlength="5000" placeholder="${t('addPh')}"></textarea>
         <div class="q-form-row">
-          <span class="q-form-hint">ავტორი: <b class="q-author">${esc(storage.get('author') || '— ჩაწერეთ სახელი ზემოთ')}</b></span>
-          <span><button type="button" class="ghost">გაუქმება</button> <button class="primary" type="submit">დამატება</button></span>
+          <span class="q-form-hint">${t('author')}: <b class="q-author">${esc(storage.get('author') || t('nameFirst'))}</b></span>
+          <span><button type="button" class="ghost">${t('cancel')}</button> <button class="primary" type="submit">${t('add')}</button></span>
         </div>
       </form>`);
     const form = $('form.add-form', box);
     form.text.value = draft;
     form.text.focus();
-    $('.ghost', form).addEventListener('click', () => { form.remove(); box.insertAdjacentHTML('beforeend', '<button type="button" class="add-btn">+ დამატება</button>'); $('.add-btn', box).addEventListener('click', () => openAddForm(box)); });
+    $('.ghost', form).addEventListener('click', () => { form.remove(); box.insertAdjacentHTML('beforeend', `<button type="button" class="add-btn">${t('addBtn')}</button>`); $('.add-btn', box).addEventListener('click', () => openAddForm(box)); });
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const author = $('#authorInput').value.trim();
       const text = form.text.value.trim();
-      if (!author) { toast('ჯერ ზემოთ ჩაწერეთ თქვენი სახელი'); $('#authorInput').focus(); return; }
+      if (!author) { toast(t('needName')); $('#authorInput').focus(); return; }
       if (!text) return;
       const sb = $('button[type=submit]', form); sb.disabled = true;
       try {
@@ -339,22 +410,22 @@
         form.remove();
         renderAdditions();
         updateCounts();
-        toast('დამატებულია ✓');
-      } catch (err) { toast('ვერ შეინახა: ' + err.message); sb.disabled = false; }
+        toast(t('addedOk'));
+      } catch (err) { toast(t('saveFailed') + err.message); sb.disabled = false; }
     });
   }
 
   // ---------- download answers (.md) ----------
   function exportMarkdown() {
-    const lines = ['# icomers — კითხვები და პასუხები', '', `ჩამოტვირთულია: ${new Date().toISOString()}`, ''];
+    const lines = [`# ${t('exportTitle')}`, '', `${t('downloadedAt')}: ${new Date().toISOString()}`, ''];
     for (const q of state.questions) {
       const ans = answersFor(q.id);
-      lines.push(`## [${ans.length ? 'პასუხგაცემული' : 'ღია'}] ${q.id} — ${q.to} (${q.docTitle})`, '', qText(q), '');
-      for (const a of ans) lines.push(`> **${a.author}** (${a.createdAt}${a.editedAt ? `, შეცვლილია ${a.editedBy || ''} ${a.editedAt}` : ''}):`, ...a.text.split('\n').map((l) => `> ${l}`), '');
+      lines.push(`## [${ans.length ? t('answered') : t('chipOpen')}] ${q.id} — ${q.to} (${q.docTitle})`, '', qText(q), '');
+      for (const a of ans) lines.push(`> **${a.author}** (${a.createdAt}${a.editedAt ? `, ${t('edited')} ${a.editedBy || ''} ${a.editedAt}` : ''}):`, ...a.text.split('\n').map((l) => `> ${l}`), '');
     }
     if (state.additions.length) {
-      lines.push('---', '', '# დამატებული პუნქტები', '');
-      for (const a of state.additions) lines.push(`## ${a.sectionTitle}`, '', `> **${a.author}** (${a.createdAt}${a.editedAt ? `, შეცვლილია ${a.editedBy || ''} ${a.editedAt}` : ''}):`, ...a.text.split('\n').map((l) => `> ${l}`), '');
+      lines.push('---', '', `# ${t('addedItems')}`, '');
+      for (const a of state.additions) lines.push(`## ${a.sectionTitle}`, '', `> **${a.author}** (${a.createdAt}${a.editedAt ? `, ${t('edited')} ${a.editedBy || ''} ${a.editedAt}` : ''}):`, ...a.text.split('\n').map((l) => `> ${l}`), '');
     }
     const blob = new Blob([lines.join('\n')], { type: 'text/markdown;charset=utf-8' });
     const url = URL.createObjectURL(blob);
@@ -383,20 +454,20 @@
   function updateCounts() {
     const total = state.questions.length;
     const done = state.questions.filter((q) => answersFor(q.id).length).length;
-    $('#progressText').textContent = `${done} / ${total} პასუხი`;
+    $('#progressText').textContent = `${done} / ${total} ${t('answersCount')}`;
     $('#progressFill').style.width = total ? `${(done / total) * 100}%` : '0';
     $$('[data-count]').forEach((el) => {
       const qs = state.questions.filter((q) => q.doc === el.dataset.count);
       const open = qs.filter((q) => !answersFor(q.id).length).length;
       el.textContent = qs.length ? (open || '✓') : '';
       el.classList.toggle('done', qs.length > 0 && open === 0);
-      el.title = qs.length ? `ღია კითხვები: ${open} / ${qs.length}` : '';
+      el.title = qs.length ? `${t('openCount')}: ${open} / ${qs.length}` : '';
       el.classList.toggle('hidden', !qs.length);
     });
     $$('[data-adds]').forEach((el) => {
       const n = state.additions.filter((a) => a.sectionId.startsWith(el.dataset.adds + '--')).length;
       el.textContent = n ? `+${n}` : '';
-      el.title = n ? `დამატებული პუნქტები: ${n}` : '';
+      el.title = n ? `${t('addsCount')}: ${n}` : '';
       el.classList.toggle('hidden', !n);
     });
   }
@@ -458,11 +529,12 @@
   }
 
   async function init() {
+    applyStaticI18n();
     const author = $('#authorInput');
     author.value = storage.get('author') || '';
     author.addEventListener('input', () => {
       storage.set('author', author.value.trim());
-      $$('.q-author').forEach((b) => (b.textContent = author.value.trim() || '— ჩაწერეთ სახელი ზემოთ'));
+      $$('.q-author').forEach((b) => (b.textContent = author.value.trim() || t('nameFirst')));
     });
     $('#menuBtn').addEventListener('click', () => $('#sidebar').classList.toggle('open'));
     $('#downloadBtn').addEventListener('click', exportMarkdown);
@@ -475,7 +547,7 @@
     state.answers = await store.load().catch(() => []);
     state.additions = await additionsStore.load().catch(() => []);
     renderAdditions();
-    $('#modeNote').textContent = state.mode === 'local' ? 'პასუხები ინახება ამ ბრაუზერში' : 'პასუხები ინახება სერვერზე';
+    $('#modeNote').textContent = state.mode === 'local' ? t('modeLocal') : t('modeServer');
     refreshAll();
     setupScrollSpy();
 

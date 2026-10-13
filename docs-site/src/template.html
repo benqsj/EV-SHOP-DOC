@@ -12,15 +12,16 @@
 <body>
   <header class="topbar">
     <button class="menu-btn" id="menuBtn" aria-label="მენიუ">☰</button>
-    <a class="brand" href="#top"><span class="brand-mark">⚡</span> icomers <span class="brand-sub">ტექნიკური დოკუმენტაცია</span></a>
-    <span class="status-pill">დასამტკიცებელი</span>
+    <a class="brand" href="#top"><span class="brand-mark">⚡</span> icomers <span class="brand-sub" data-i18n="brandSub">ტექნიკური დოკუმენტაცია</span></a>
+    <span class="status-pill" data-i18n="status">დასამტკიცებელი</span>
     <div class="topbar-right">
-      <a class="progress" href="#12-roadmap--ღია-კითხვები" id="progress" title="ღია კითხვები">
+      <div class="lang-switch" role="group" aria-label="Language"><button type="button" data-lang="ka">KA</button><button type="button" data-lang="en">EN</button></div>
+      <a class="progress" href="#12-roadmap" id="progress">
         <span class="progress-bar"><span id="progressFill"></span></span>
         <span id="progressText">…</span>
       </a>
       <label class="me">
-        <span>თქვენი სახელი</span>
+        <span data-i18n="yourName">თქვენი სახელი</span>
         <input id="authorInput" placeholder="მაგ. გიორგი (Billing)" maxlength="80">
       </label>
     </div>
@@ -31,14 +32,14 @@
       <input class="nav-filter" id="navFilter" type="search" placeholder="ძებნა სარჩევში…">
       <div id="nav"></div>
       <div class="sidebar-foot">
-        <button type="button" class="link-btn" id="downloadBtn">⬇ პასუხების და დამატებების ჩამოტვირთვა</button>
+        <button type="button" class="link-btn" id="downloadBtn" data-i18n="download">⬇ პასუხების და დამატებების ჩამოტვირთვა</button>
         <span class="foot-note" id="modeNote"></span>
       </div>
     </nav>
     <main class="content" id="top">
       <section class="intro">
-        <h1>icomers — ონლაინ მაღაზია</h1>
-        <p>კომპანიის საკუთარი პროდუქციის (EV დამტენების ნაწილები და აქსესუარები) ონლაინ მაღაზიის არქიტექტურა და ტექნიკური დოკუმენტაცია: backend, frontend, admin panel, API, ინტეგრაციები და deploy.</p>
+        <h1 data-i18n="introTitle">icomers — ონლაინ მაღაზია</h1>
+        <p data-i18n="introText">კომპანიის საკუთარი პროდუქციის (EV დამტენების ნაწილები და აქსესუარები) ონლაინ მაღაზიის არქიტექტურა და ტექნიკური დოკუმენტაცია: backend, frontend, admin panel, API, ინტეგრაციები და deploy.</p>
       </section>
       <div id="docs"><p class="loading">იტვირთება…</p></div>
     </main>

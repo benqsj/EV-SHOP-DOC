@@ -9,15 +9,20 @@ const ROOT = path.resolve(HERE, '..');
 
 export function buildHtml(docsDir = path.join(ROOT, 'docs')) {
   const read = (p) => fs.readFileSync(p, 'utf8');
-  const docs = {};
-  for (const f of fs.readdirSync(docsDir).filter((f) => /^\d\d-.+\.md$/.test(f)).sort()) {
-    docs[f.replace(/\.md$/, '')] = read(path.join(docsDir, f));
-  }
-  const diagrams = {};
-  const dDir = path.join(docsDir, 'diagrams');
-  if (fs.existsSync(dDir)) {
-    for (const f of fs.readdirSync(dDir).filter((f) => f.endsWith('.svg'))) diagrams[f.replace(/\.svg$/, '')] = read(path.join(dDir, f));
-  }
+  const readDocs = (dir) => {
+    const out = {};
+    if (!fs.existsSync(dir)) return out;
+    for (const f of fs.readdirSync(dir).filter((f) => /^\d\d-.+\.md$/.test(f)).sort()) out[f.replace(/\.md$/, '')] = read(path.join(dir, f));
+    return out;
+  };
+  const readDiagrams = (dir) => {
+    const out = {};
+    if (!fs.existsSync(dir)) return out;
+    for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.svg'))) out[f.replace(/\.svg$/, '')] = read(path.join(dir, f));
+    return out;
+  };
+  const docs = { ka: readDocs(docsDir), en: readDocs(path.join(docsDir, 'en')) };
+  const diagrams = { ka: readDiagrams(path.join(docsDir, 'diagrams')), en: readDiagrams(path.join(docsDir, 'diagrams', 'en')) };
   const safe = (js) => js.replace(/<\/(script)/gi, '<\\/$1');
   const content = 'window.ICOMERS_DOCS = ' + safe(JSON.stringify({ docs, diagrams })) + ';';
   const src = path.join(HERE, 'src');

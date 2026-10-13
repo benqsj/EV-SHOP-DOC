@@ -33,6 +33,9 @@ a:hover { text-decoration: underline; }
 .progress { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; white-space: nowrap; }
 .progress-bar { width: 110px; height: 6px; border-radius: 6px; background: var(--surface-2); overflow: hidden; }
 .progress-bar span { display: block; height: 100%; width: 0; background: var(--accent); transition: width .4s; }
+.lang-switch { display: inline-flex; border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+.lang-switch button { font: inherit; font-size: 12.5px; font-weight: 700; padding: 4px 10px; border: 0; background: var(--surface); color: var(--muted); cursor: pointer; }
+.lang-switch button.active { background: var(--accent); color: #fff; }
 .me { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
 .me input { width: 190px; }
 .menu-btn { display: none; border: 0; background: none; font-size: 22px; color: var(--text); cursor: pointer; }

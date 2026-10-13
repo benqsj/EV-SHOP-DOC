@@ -9,7 +9,7 @@
 | **Identity** | Login და რეგისტრაცია (OAuth2 / OIDC), ტოკენის შემოწმება, ადმინის როლები |
 | **Billing** | gRPC: გადახდის შექმნა, refund. NATS: გადახდის შედეგი |
 | **Fiscal** | gRPC Worker-იდან: გაყიდვისა და დაბრუნების ჩეკები |
-| **Notification** | მოგვიანებით. ამჟამად push-ისთვისაა, მობილური აპი კი არ იგეგმება |
+| **Notification** | მოგვიანებით. ამჟამად push შეტყობინებებისთვისაა, მობილური აპი კი არ იგეგმება |
 
 ---
 
@@ -23,17 +23,17 @@
 |---|---|
 | OIDC Discovery / issuer URL | endpoint-ების ავტომატური აღმოჩენა |
 | Authorization Code + PKCE | ბრაუზერისთვის უსაფრთხო login flow |
-| JWKS endpoint | Shop API ტოკენს თავად ამოწმებს, Identity-ზე ყოველი request-ის გარეშე |
+| JWKS endpoint | Shop API ტოკენს თავად ამოწმებს, ყოველ request-ზე Identity-სთან მიმართვის გარეშე |
 | `roles` claim | ადმინის როლები: `admin`, `manager`, `content_editor`, `warehouse` |
 | ორი client | `icomers-storefront` და `icomers-admin`, თავ-თავისი redirect URI-ებით |
 | Audience (`aud`) | `icomers-api`, რომ სხვა სერვისის ტოკენი ჩვენთან არ იმუშაოს |
 
 :::question id="identity-oidc" to="Identity გუნდი"
-ზემოთ ცხრილში ჩამოთვლილიდან რომელი არის მხარდაჭერილი (OIDC discovery, PKCE, JWKS, `roles` claim, audience)? შეგიძლიათ დაარეგისტრიროთ ორი client (`icomers-storefront`, `icomers-admin`) და შექმნათ ადმინის როლები? გთხოვთ, მიუთითოთ issuer URL (dev / staging / prod).
+ზემოთ ცხრილში ჩამოთვლილთაგან რომელია მხარდაჭერილი (OIDC discovery, PKCE, JWKS, `roles` claim, audience)? შეგიძლიათ დაარეგისტრიროთ ორი client (`icomers-storefront`, `icomers-admin`) და შექმნათ ადმინის როლები? გთხოვთ, მიუთითოთ issuer URL (dev / staging / prod).
 :::
 
 :::question id="identity-login-ui" to="Identity გუნდი"
-Login / რეგისტრაციის გვერდი Identity-ის hosted გვერდია? აქვს ქართული ენა და ბრენდინგის შეცვლის შესაძლებლობა? რეგისტრაცია email-ით, ტელეფონით (SMS) თუ ორივეთი?
+Login / რეგისტრაციის გვერდი Identity-ის hosted გვერდია? აქვს ქართული ენის მხარდაჭერა და ბრენდინგის შეცვლის შესაძლებლობა? რეგისტრაცია email-ით, ტელეფონით (SMS) თუ ორივეთი?
 :::
 
 :::question id="platform-s2s-auth" to="Platform / Backend გუნდი"
@@ -44,7 +44,7 @@ Service-to-service ავთენტიფიკაცია gRPC-ზე რო
 
 ![Login flow](diagrams/login.svg)
 
-- ტოკენები ინახება Next.js-ის სერვერზე. ბრაუზერში მხოლოდ httpOnly cookie-ა, `localStorage` არ გამოიყენება. რატომ: იხ. [SSE და ავტორიზაცია](02-architecture.md#sse-და-ავტორიზაცია-ორი-ვარიანტი).
+- ტოკენები ინახება Next.js-ის სერვერზე. ბრაუზერს მხოლოდ httpOnly cookie აქვს, `localStorage` არ გამოიყენება. რატომ: იხ. [SSE და ავტორიზაცია](02-architecture.md#sse-და-ავტორიზაცია-ორი-ვარიანტი).
 - Shop API ამოწმებს JWT-ს (ხელმოწერა JWKS-ით, `iss`, `aud`, `exp`) და როლებს (`RolesGuard`).
 - პირველი login-ისას Shop API ქმნის `customers` ჩანაწერს `sub`-ით.
 - Checkout მოითხოვს login-ს. კალათა login-ის გარეშეც მუშაობს და login-ისას ერწყმის. საბოლოო გადაწყვეტილება: კითხვა `biz-guest-checkout`.
@@ -67,7 +67,7 @@ Billing უკვე აქვეყნებს გადახდის შე
 
 | ივენთი | მაღაზიის რეაქცია |
 |---|---|
-| გადახდა წარმატებულია | შეკვეთა → `PAID`, მარაგი ჩამოიჭრება, ჩეკი გამოიწერება |
+| გადახდა წარმატებულია | შეკვეთა → `PAID`, მარაგი ჩამოიწერება, ჩეკი გამოიწერება |
 | გადახდა ჩავარდა | შეკვეთა → `PAYMENT_FAILED`, მარაგი თავისუფლდება |
 | refund დასრულდა | refund → `SUCCEEDED`, დაბრუნების ჩეკი |
 
@@ -76,7 +76,7 @@ Billing უკვე აქვეყნებს გადახდის შე
 :::
 
 :::question id="billing-idempotency" to="Billing გუნდი"
-`CreatePayment` არის idempotent? ანუ ერთი და იგივე `idempotency_key`-ით ორი გამოძახება ერთ გადახდას ქმნის?
+`CreatePayment` არის idempotent? ანუ ერთი და იმავე `idempotency_key`-ით ორი გამოძახება ერთ გადახდას ქმნის?
 :::
 
 :::question id="billing-refund" to="Billing გუნდი"
@@ -84,7 +84,7 @@ Billing უკვე აქვეყნებს გადახდის შე
 :::
 
 :::question id="billing-expiry" to="Billing გუნდი"
-რამდენ ხანში ითვლება გადაუხდელი გადახდა **ვადაგასულად**? ამაზეა დამოკიდებული მარაგის რეზერვაციის ვადა (ახლა 15 წუთი).
+რა დროის შემდეგ ითვლება გადაუხდელი გადახდა **ვადაგასულად**? ამაზეა დამოკიდებული მარაგის რეზერვაციის ვადა (ახლა 15 წუთი).
 :::
 
 :::question id="billing-sandbox" to="Billing გუნდი"
@@ -104,7 +104,7 @@ Billing უკვე აქვეყნებს გადახდის შე
 | `IssueReceipt` | გაყიდვის ჩეკი: ხაზები (სახელი, რაოდენობა, ფასი, დღგ), ჯამი, გადახდის ტიპი |
 | `IssueRefundReceipt` | დაბრუნების ჩეკი, ორიგინალ ჩეკზე მითითებით |
 
-**როდის იძახება:** Worker იღებს `shop.order.paid` ივენთს და იძახებს `IssueReceipt`-ს. შეცდომისას ცდილობს ხელახლა; თუ მრავალჯერადი მცდელობა ჩავარდა, ჩეკი `FAILED` ხდება და ადმინი იღებს გაფრთხილებას „თავიდან ცდის“ ღილაკით.
+**როდის იძახება:** Worker იღებს `shop.order.paid` ივენთს და იძახებს `IssueReceipt`-ს. შეცდომის შემთხვევაში ხელახლა ცდის; თუ რამდენიმე მცდელობა ჩავარდა, ჩეკი `FAILED` ხდება და ადმინი იღებს გაფრთხილებას „თავიდან ცდის“ ღილაკით.
 
 :::question id="fiscal-sync" to="Fiscal გუნდი"
 Fiscal ჩეკის ნომერს **სინქრონულად** აბრუნებს gRPC პასუხში, თუ **ასინქრონულად** (საკუთარი NATS ივენთით)?
@@ -123,13 +123,13 @@ Fiscal ჩეკის ნომერს **სინქრონულად** 
 ## 4. შეტყობინებები (email / SMS)
 
 შეკვეთის დადასტურება და სტატუსის ცვლილება მომხმარებელს ორი გზით შეიძლება მივაწოდოთ:
-- **A:** Notification სერვისს ემატება email/SMS არხი (ცენტრალიზებული, კომპანიის ყველა სერვისისთვის)
+- **A:** Notification სერვისს დაემატება email/SMS არხი (ცენტრალიზებული, კომპანიის ყველა სერვისისთვის)
 - **B:** Worker პირდაპირ იყენებს email provider-ს და ქართულ SMS provider-ს
 
 ორივე შემთხვევაში წყარო ივენთია: `shop.order.paid`, `shop.order.status_changed`.
 
 :::question id="notif-channel" to="Backend გუნდი / ბიზნესი"
-შეკვეთის შეტყობინებები რომელი არხით წავიდეს (email, SMS, ორივე) და საიდან: Notification სერვისი გაფართოვდება (A), თუ მაღაზია პირდაპირ provider-ს გამოიყენებს (B)?
+შეკვეთის შეტყობინებები რომელი არხით გაიგზავნოს (email, SMS, ორივე) და საიდან: Notification სერვისი გაფართოვდება (A), თუ მაღაზია პირდაპირ provider-ს გამოიყენებს (B)?
 :::
 
 ---
@@ -175,7 +175,7 @@ Stream: `SHOP`, subjects `shop.>`. მაღაზიის მიერ გა�
 | `backoff` | 1s, 5s, 30s, 2m, 10m … |
 | ამოწურვის შემდეგ | `failed_events` ცხრილი + გაფრთხილება ადმინში |
 
-`.proto` კონტრაქტები ინახება `icomers-api/proto/`-ში, TypeScript კოდი მათგან Buf + ts-proto-ით გენერირდება. ივენთების სქემები `icomers-api/src/contracts/`-შია (zod), რომ publisher-იც და consumer-იც ერთსა და იმავეს იყენებდნენ.
+`.proto` კონტრაქტები ინახება `icomers-api/proto/`-ში, TypeScript კოდი მათგან Buf + ts-proto-ით გენერირდება. ივენთების სქემები `icomers-api/src/contracts/`-შია (zod), რომ publisher-იც და consumer-იც ერთსა და იმავე სქემებს იყენებდნენ.
 
 </details>
 
