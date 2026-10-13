@@ -41,4 +41,4 @@
 | Alternative | Why we did not choose it |
 |---|---|
 | **Drizzle** (ORM) | Prisma's tooling (Studio, migrations) is more convenient for this project |
-| **Splitting the Shop into several microservices** | Order and stock must be in one transaction; splitting would require sagas and extra infrastructure. It can still be split later if needed |
+| **Splitting the Shop into several microservices** | Catalog, stock and orders are tightly connected and work with a local transaction in one database. Splitting them into separate services would require a distributed transaction (saga) between them, which is not needed at this stage. Splitting becomes relevant if other company products start using the catalog or separate teams appear |

@@ -65,6 +65,16 @@ icomers-api/src/
 - Price, VAT and totals are always calculated on the server.
 - Every NATS consumer is **idempotent**: the same event may arrive twice, and the result must be the same.
 
+### Order process and saga
+
+- **Inside the shop** (order + stock): a local Postgres transaction, because this data lives in one database.
+- **With company services** (Billing → Fiscal → refund): a distributed process with compensations, driven by events (choreography saga). For example: payment failed → the reservation is released; order cancelled → refund → refund receipt.
+- The company already has a saga orchestrator (Charging), where this approach is the right choice for charging sessions: a session spans several independent systems and lasts a long time.
+
+:::question id="saga-orchestrator" to="Backend team (Charging saga)"
+Should the shop's order process (payment → fiscal receipt → refund) be managed by the company's existing saga orchestrator instead of an event-driven flow? If so, what does integrating with it require?
+:::
+
 ## 5. Outbox pattern
 
 Problem: the order was written to the database, but the server went down before the event was sent to NATS, and the event was lost.
