@@ -2,7 +2,7 @@
 
 ## 1. რეპოზიტორიები
 
-კოდი იყოფა **სამ ცალკე რეპოდ**, როგორც კომპანიის სხვა პროექტებში (მაგ. ev-charger-admin). თითოეულს თავისი Dockerfile, CI და deploy აქვს.
+კოდი იყოფა **სამ ცალკე რეპოდ**. თითოეულს თავისი Dockerfile, CI და deploy აქვს.
 
 | რეპო | რა არის | usectl აპები |
 |---|---|---|
@@ -63,7 +63,7 @@ pnpm api:generate   # openapi-typescript <api-ს openapi.json> -o src/api/schem
 | nats | `nats:2` (`-js` JetStream-ით) | 4222, 8222 (monitoring) |
 | minio | `minio/minio` (ლოკალური S3) | 9000, 9001 (console) |
 | mailpit | `axllent/mailpit` (email-ის ტესტირება) | 1025, 8025 |
-| identity | Keycloak ან თქვენი Identity-ის dev ინსტანსი | 8080 |
+| identity | Keycloak ან კომპანიის Identity-ის dev ინსტანსი | 8080 |
 
 ### Mock-ები
 სანამ არსებული სერვისების dev ინსტანსებზე წვდომა არ გვაქვს:

@@ -69,7 +69,7 @@ icomers-api/src/
 
 - **Inside the shop** (order + stock): a local Postgres transaction, because this data lives in one database.
 - **With company services** (Billing → Fiscal → refund): a distributed process with compensations, driven by events (choreography saga). For example: payment failed → the reservation is released; order cancelled → refund → refund receipt.
-- The company already has a saga orchestrator (Charging), where this approach is the right choice for charging sessions: a session spans several independent systems and lasts a long time.
+- The company's existing saga orchestrator (Charging) is used for charging sessions, which span several independent systems and last a long time.
 
 :::question id="saga-orchestrator" to="Backend team (Charging saga)"
 Should the shop's order process (payment → fiscal receipt → refund) be managed by the company's existing saga orchestrator instead of an event-driven flow? If so, what does integrating with it require?
@@ -117,24 +117,13 @@ Each API pod receives NATS events itself and forwards them to its own browsers. 
 - **Proxy:** on usectl, traffic goes through Cloudflare and Traefik. The heartbeat keeps the connection open; details: [Deployment](10-deployment.md#4-sse-on-usectl).
 - Event names are in `snake_case`: `order_created`, `order_paid`, `order_status_changed`, `inventory_low_stock`.
 
-### SSE and authorization: two options
+### SSE and authorization
 
-The browser's standard `EventSource` cannot send an `Authorization` header. There are two ways to solve this:
+The token is stored on the Next.js server (BFF); the browser only has an httpOnly cookie. The SSE connection is opened with a regular `EventSource` to Next.js, which forwards it to the Shop API with the token.
 
-| | **Option A: BFF + cookie** (recommended) | **Option B: Bearer token + polyfill** (as in ev-charger-admin) |
-|---|---|---|
-| How it works | The token is stored on the Next.js server; the browser only has an httpOnly cookie. SSE goes through a standard `EventSource` to Next.js, which forwards it to the API with the token | The token is in the browser. SSE is opened with `event-source-polyfill`, which sends the `Authorization: Bearer` header |
-| Token refresh | Done by the Next.js server, in one place, for all requests | The SSE service needs its own 401 → refresh logic, separate from the axios interceptor |
-| Security | The token is not accessible to JavaScript, so it cannot be stolen via XSS | The token is accessible to JavaScript, so the XSS risk is higher |
-| Extra library | Not needed | polyfill |
-
-**Recommendation: Option A.** Reasons:
-1. **The shop is a public site** where customers pay by card. Storing the token in an httpOnly cookie protects against XSS.
-2. **Token refresh is in one place.** In Option B it has to be written in two places (regular requests and SSE), and it also needs protection against redundant refreshes.
-3. **The code is simple:** a standard `EventSource` with automatic reconnect, no polyfill.
-4. We already have Next.js as a server, so BFF requires no additional infrastructure.
-
-Option B is a natural choice for an app that runs only in the browser and has no server part (e.g. a Vite SPA). In our case, the Next.js server solves this problem.
+- **Security:** the token is not accessible to JavaScript, so it cannot be stolen through XSS. This is essential for a public shop where customers pay by card.
+- **Token refresh in one place:** the Next.js server refreshes the token for every request, including SSE.
+- **Simple client:** no polyfill and no separate refresh logic for SSE; `EventSource` reconnects on its own.
 
 ## 7. gRPC client rules
 

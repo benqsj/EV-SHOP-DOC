@@ -5,9 +5,9 @@
 - Tailwind CSS (+ shadcn/ui საბაზისო კომპონენტებისთვის)
 - **next-intl**: ka / en, locale URL-ში
 - API client: `openapi-fetch` + `icomers-api`-ის `openapi.json`-იდან გენერირებული ტიპები
-- Auth: Auth.js (OIDC) ან `openid-client`, BFF pattern (იხ. [03 §1](03-integrations.md#1-identity--oauth2--oidc))
+- Auth: Auth.js (OIDC), BFF pattern (იხ. [03 §1](03-integrations.md#1-identity--oauth2--oidc))
 - ფორმები: react-hook-form + zod
-- Client state: მინიმალური. header-ში კალათის ნივთების რაოდენობა → TanStack Query ან Server Actions + `revalidatePath`
+- Client state: მინიმალური. header-ში კალათის ნივთების რაოდენობა → TanStack Query
 
 ## 2. გვერდები (routes)
 

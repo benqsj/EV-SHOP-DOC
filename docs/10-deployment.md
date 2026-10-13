@@ -97,7 +97,7 @@ CMD ["node", "server.js"]
 - პასუხს აქვს `Cache-Control: no-cache` და `X-Accel-Buffering: no`.
 - კავშირის გაწყვეტისას კლიენტი ხელახლა უერთდება და REST-ით ამოწმებს მონაცემებს (იხ. [SSE-ის წესები](02-architecture.md#sse-ის-წესები)).
 
-usectl-ის დოკუმენტაცია SSE-ს ცალკე არ აღწერს, ამიტომ ეს staging-ზე უნდა შემოწმდეს (კითხვა `usectl-sse`).
+SSE-ის მუშაობა usectl-ზე staging-ზე შემოწმდება (კითხვა `usectl-sse`).
 
 ## 5. Env ცვლადები და secrets
 

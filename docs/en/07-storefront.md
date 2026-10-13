@@ -5,9 +5,9 @@
 - Tailwind CSS (+ shadcn/ui for base components)
 - **next-intl**: ka / en, locale in the URL
 - API client: `openapi-fetch` + types generated from `icomers-api`'s `openapi.json`
-- Auth: Auth.js (OIDC) or `openid-client`, BFF pattern (see [03 §1](03-integrations.md#1-identity--oauth2--oidc))
+- Auth: Auth.js (OIDC), BFF pattern (see [03 §1](03-integrations.md#1-identity--oauth2--oidc))
 - Forms: react-hook-form + zod
-- Client state: minimal. Cart item count in the header → TanStack Query or Server Actions + `revalidatePath`
+- Client state: minimal. Cart item count in the header → TanStack Query
 
 ## 2. Pages (routes)
 

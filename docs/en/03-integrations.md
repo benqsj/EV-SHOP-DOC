@@ -15,7 +15,7 @@ The gRPC methods below describe what functionality the shop needs. Exact names a
 
 ## 1. Identity — OAuth2 / OIDC
 
-**What we already know** (from other company projects): Identity uses OAuth2, the access token is a **JWT**, the user ID is the `sub` claim (UUID), and refresh tokens are supported. In the shop, `customers.identity_user_id = sub`.
+**Current Identity setup:** Identity uses OAuth2, the access token is a **JWT**, the user ID is the `sub` claim (UUID), and refresh tokens are supported. In the shop, `customers.identity_user_id = sub`.
 
 **What we additionally need:** OAuth2 tells us what the token is allowed to do. To know **who the user is** (name, email), we need **OpenID Connect (OIDC)**, which sits on top of OAuth2.
 
@@ -44,7 +44,7 @@ How is service-to-service authentication done over gRPC: **mTLS**, **service tok
 
 ![Login flow](diagrams/login.svg)
 
-- Tokens are stored on the Next.js server. The browser only has an httpOnly cookie; `localStorage` is not used. Why: see [SSE and authorization](02-architecture.md#sse-and-authorization-two-options).
+- Tokens are stored on the Next.js server. The browser only has an httpOnly cookie; `localStorage` is not used. Why: see [SSE and authorization](02-architecture.md#sse-and-authorization).
 - Shop API verifies the JWT (signature via JWKS, `iss`, `aud`, `exp`) and roles (`RolesGuard`).
 - On first login, Shop API creates a `customers` record with the `sub`.
 - Checkout requires login. The cart also works without login and is merged on login. Final decision: question `biz-guest-checkout`.

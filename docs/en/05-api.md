@@ -198,7 +198,7 @@ SSE rules (reconnect, heartbeat, reconcile): see [Architecture](02-architecture.
 | `/checkout` | 10 / min / user |
 | Admin | 600 / min / user |
 
-The first version uses `@nestjs/throttler` or the ingress rate limit.
+The first version uses `@nestjs/throttler`.
 
 </details>
 

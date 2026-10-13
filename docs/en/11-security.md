@@ -19,7 +19,7 @@
 - Security headers: CSP, HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `frame-ancestors 'none'`
 - Product description rich text: sanitize (XSS)
 - File upload: presigned URL only, content-type and size limits, images only
-- Rate limiting (see [05 §4](05-api.md#admin-sse-format))
+- Rate limiting (see [REST API §4](05-api.md#admin-sse-format), "Technical details")
 - Import (CSV/XLSX): size limit, row-by-row validation, formula injection protection on export
 
 ## Service-to-service

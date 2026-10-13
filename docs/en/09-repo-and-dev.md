@@ -2,7 +2,7 @@
 
 ## 1. Repositories
 
-The code is split into **three separate repos**, as in the company's other projects (e.g. ev-charger-admin). Each has its own Dockerfile, CI and deploy.
+The code is split into **three separate repos**. Each has its own Dockerfile, CI and deploy.
 
 | Repo | What it is | usectl apps |
 |---|---|---|
@@ -63,7 +63,7 @@ The `docker-compose.yml` in `icomers-api` runs the infrastructure. The apps run 
 | nats | `nats:2` (with `-js` JetStream) | 4222, 8222 (monitoring) |
 | minio | `minio/minio` (local S3) | 9000, 9001 (console) |
 | mailpit | `axllent/mailpit` (email testing) | 1025, 8025 |
-| identity | Keycloak or your Identity dev instance | 8080 |
+| identity | Keycloak or the company Identity dev instance | 8080 |
 
 ### Mocks
 Until we have access to dev instances of the existing services:

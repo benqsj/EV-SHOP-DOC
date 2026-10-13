@@ -198,7 +198,7 @@ SSE-ის წესები (reconnect, heartbeat, reconcile): იხ. [არ
 | `/checkout` | 10 / წთ / user |
 | Admin | 600 / წთ / user |
 
-პირველ ვერსიაში გამოიყენება `@nestjs/throttler` ან ingress-ის rate limit.
+პირველ ვერსიაში გამოიყენება `@nestjs/throttler`.
 
 </details>
 

@@ -97,7 +97,7 @@ Traffic path: browser → **Cloudflare** → **Traefik** → `api`. An SSE conne
 - The response has `Cache-Control: no-cache` and `X-Accel-Buffering: no`.
 - When the connection drops, the client reconnects and re-checks the data via REST (see [SSE rules](02-architecture.md#sse-rules)).
 
-The usectl documentation does not describe SSE specifically, so this must be verified on staging (question `usectl-sse`).
+SSE behaviour on usectl will be verified on staging (question `usectl-sse`).
 
 ## 5. Env variables and secrets
 

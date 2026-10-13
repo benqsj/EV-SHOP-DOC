@@ -3,7 +3,7 @@
 ## 1. ზოგადი
 - ცალკე Next.js აპი, ცალკე domain (`admin.<domain>`), SEO არ სჭირდება (`noindex`)
 - Auth: იგივე Identity, client `icomers-admin`. შესვლა შესაძლებელია მხოლოდ ადმინის როლით, სხვა შემთხვევაში ნაჩვენებია 403 გვერდი
-- UI: **shadcn/ui** + Tailwind, **TanStack Table** (სორტირება, ფილტრები, server-side pagination), **TanStack Query** (cache, mutations, optimistic updates)
+- UI: **shadcn/ui** + Tailwind, **TanStack Table** (სორტირება, ფილტრები, server-side pagination), **TanStack Query** (cache, mutations)
 - ფორმები: react-hook-form + zod
 - ენა: ძირითადად ქართული (en მოგვიანებით, საჭიროების შემთხვევაში)
 - Live: `EventSource("/api/admin/events")`. Next.js (BFF) მას Shop API-ის `/admin/events/stream`-ზე გადაამისამართებს. წესები: [SSE](02-architecture.md#6-sse-live-განახლებები)
@@ -31,7 +31,7 @@
   - **მახასიათებლები:** დინამიური ატრიბუტები
   - **თავსებადობა:** ბრენდი → მოდელების multi-select, „უნივერსალური“ checkbox, შენიშვნა მოდელზე
   - **მარაგი:** მიმდინარე რაოდენობა + მოძრაობების ისტორია
-- Import/Export: CSV/XLSX (კატალოგის საწყისი შევსებისთვის ძალიან საჭიროა)
+- Import/Export: CSV/XLSX (კატალოგის საწყისი შევსებისთვის)
 
 ### 2.4 კატეგორიები
 - ხის რედაქტორი (რიგის შეცვლა drag & drop-ით), თარგმანები

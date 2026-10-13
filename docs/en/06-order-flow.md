@@ -12,7 +12,7 @@
 ![Checkout and payment](diagrams/checkout.svg)
 
 ### Important details
-1. **The price is always calculated on the server.** A price sent by the client is never used. `expectedTotalMinor` is only for comparison.
+1. **The price is always calculated on the server.** A price sent by the client is never used. `expected_total_minor` is only for comparison.
 2. **The reservation happens in a transaction.** If stock is insufficient for any line, the entire transaction is rolled back → `409 OUT_OF_STOCK` with details.
 3. **If `CreatePayment` fails** (Billing is unavailable): the order stays in `PENDING_PAYMENT` and the customer sees "Try again" (`retry-payment`). The reservation remains valid until it expires.
 4. **Idempotency-Key:** a second request with the same key (double click, refresh) returns the same response and does not create a new order.

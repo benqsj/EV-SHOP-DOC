@@ -3,7 +3,7 @@
 ## 1. General
 - A separate Next.js app on a separate domain (`admin.<domain>`); no SEO needed (`noindex`)
 - Auth: the same Identity, client `icomers-admin`. Sign-in is allowed only with an admin role; otherwise a 403 page is shown
-- UI: **shadcn/ui** + Tailwind, **TanStack Table** (sorting, filters, server-side pagination), **TanStack Query** (cache, mutations, optimistic updates)
+- UI: **shadcn/ui** + Tailwind, **TanStack Table** (sorting, filters, server-side pagination), **TanStack Query** (cache, mutations)
 - Forms: react-hook-form + zod
 - Language: mainly Georgian (en later, if needed)
 - Live: `EventSource("/api/admin/events")`. Next.js (BFF) forwards it to the Shop API's `/admin/events/stream`. Rules: [SSE](02-architecture.md#6-sse-live-updates)
@@ -31,7 +31,7 @@
   - **Specifications:** dynamic attributes
   - **Compatibility:** brand → multi-select of models, "Universal" checkbox, per-model note
   - **Stock:** current quantity + movement history
-- Import/Export: CSV/XLSX (very much needed for the initial catalog population)
+- Import/Export: CSV/XLSX (for the initial catalog population)
 
 ### 2.4 Categories
 - Tree editor (drag & drop reordering), translations

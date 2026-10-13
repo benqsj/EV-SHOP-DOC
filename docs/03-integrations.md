@@ -15,7 +15,7 @@
 
 ## 1. Identity — OAuth2 / OIDC
 
-**რაც უკვე ვიცით** (კომპანიის სხვა პროექტებიდან): Identity იყენებს OAuth2-ს, access token არის **JWT**, მომხმარებლის ID არის `sub` claim (UUID), refresh token მხარდაჭერილია. მაღაზიაში `customers.identity_user_id = sub`.
+**არსებული Identity:** იყენებს OAuth2-ს, access token არის **JWT**, მომხმარებლის ID არის `sub` claim (UUID), refresh token მხარდაჭერილია. მაღაზიაში `customers.identity_user_id = sub`.
 
 **რაც დამატებით გვჭირდება:** OAuth2 გვეუბნება, რა უფლება აქვს ტოკენს. იმის გასაგებად, **ვინ არის მომხმარებელი** (სახელი, email), საჭიროა **OpenID Connect (OIDC)**, რომელიც OAuth2-ის თავზე დგას.
 
@@ -44,7 +44,7 @@ Service-to-service ავთენტიფიკაცია gRPC-ზე რო
 
 ![Login flow](diagrams/login.svg)
 
-- ტოკენები ინახება Next.js-ის სერვერზე. ბრაუზერს მხოლოდ httpOnly cookie აქვს, `localStorage` არ გამოიყენება. რატომ: იხ. [SSE და ავტორიზაცია](02-architecture.md#sse-და-ავტორიზაცია-ორი-ვარიანტი).
+- ტოკენები ინახება Next.js-ის სერვერზე. ბრაუზერს მხოლოდ httpOnly cookie აქვს, `localStorage` არ გამოიყენება. რატომ: იხ. [SSE და ავტორიზაცია](02-architecture.md#sse-და-ავტორიზაცია).
 - Shop API ამოწმებს JWT-ს (ხელმოწერა JWKS-ით, `iss`, `aud`, `exp`) და როლებს (`RolesGuard`).
 - პირველი login-ისას Shop API ქმნის `customers` ჩანაწერს `sub`-ით.
 - Checkout მოითხოვს login-ს. კალათა login-ის გარეშეც მუშაობს და login-ისას ერწყმის. საბოლოო გადაწყვეტილება: კითხვა `biz-guest-checkout`.

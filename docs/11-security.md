@@ -19,7 +19,7 @@
 - Security headers: CSP, HSTS, `X-Content-Type-Options`, `Referrer-Policy`, `frame-ancestors 'none'`
 - პროდუქტის აღწერის rich text: sanitize (XSS)
 - ფაილის ატვირთვა: მხოლოდ presigned URL, content-type და ზომის ლიმიტი, მხოლოდ სურათები
-- Rate limiting (იხ. [05 §5](05-api.md#admin-sse-ფორმატი))
+- Rate limiting (იხ. [REST API §4](05-api.md#admin-sse-ფორმატი), „ტექნიკური დეტალები“)
 - Import (CSV/XLSX): ზომის ლიმიტი, ვალიდაცია ხაზ-ხაზ, formula injection-ისგან დაცვა export-ში
 
 ## Service-to-service
