@@ -67,16 +67,21 @@ async function postgresStorage(config) {
 
 async function fileStorage(dataDir) {
   const file = path.join(dataDir, 'answers.json');
-  await fs.mkdir(dataDir, { recursive: true });
+  let writable = true;
+  try { await fs.mkdir(dataDir, { recursive: true }); } catch (err) {
+    writable = false;
+    console.warn(`⚠ cannot write to ${dataDir} (${err.code}); answers are kept in memory only. Set DATABASE_URL to persist them.`);
+  }
   let data = { answers: [], additions: [] };
-  if (existsSync(file)) data = { answers: [], additions: [], ...JSON.parse(await fs.readFile(file, 'utf8')) };
+  try { if (existsSync(file)) data = { answers: [], additions: [], ...JSON.parse(await fs.readFile(file, 'utf8')) }; } catch { /* start empty */ }
   let chain = Promise.resolve();
   const persist = () => (chain = chain.then(async () => {
+    if (!writable) return;
     await fs.writeFile(file + '.tmp', JSON.stringify(data, null, 2));
     await fs.rename(file + '.tmp', file);
-  }));
+  }).catch((err) => console.error('save failed:', err.message)));
   return {
-    name: 'file: ' + file,
+    name: writable ? 'file: ' + file : 'memory (not persistent)',
     async list(kind) { return data[kind]; },
     async add(kind, item) { data[kind].push(item); await persist(); return item; },
     async update(kind, id, text, editor) {
@@ -92,5 +97,7 @@ async function fileStorage(dataDir) {
 
 export async function createStorage(dataDir) {
   const cfg = pgConfig();
-  return cfg ? postgresStorage(cfg) : fileStorage(dataDir);
+  if (cfg) return postgresStorage(cfg);
+  if (process.env.NODE_ENV === 'production') console.warn('⚠ DATABASE_URL is not set: answers and additions will be lost on restart. Attach a Postgres addon.');
+  return fileStorage(dataDir);
 }

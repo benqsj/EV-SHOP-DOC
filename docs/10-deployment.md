@@ -112,6 +112,8 @@ usectl-ის დოკუმენტაცია SSE-ს ცალკე ა�
 
 DNS-ში `CNAME → custom.usectl.com`, შემდეგ `usectl domains verify` და `attach-app` შესაბამის აპზე. TLS სერტიფიკატს Cloudflare ავტომატურად გასცემს.
 
+`*.usectl.com` მისამართზე (staging-ისთვის) გამოიყენება მხოლოდ **ერთდონიანი** სახელი, მაგ. `icomers-api.usectl.com`. `api.icomers.usectl.com`-ის მსგავსი მრავალდონიანი სახელისთვის Cloudflare სერტიფიკატს ვერ გასცემს, და ბრაუზერი აჩვენებს `ERR_SSL_VERSION_OR_CIPHER_MISMATCH`-ს.
+
 ## 7. გარემოები
 
 | გარემო | სად | Branch | Billing / Fiscal |
