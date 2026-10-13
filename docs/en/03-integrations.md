@@ -32,10 +32,6 @@ The gRPC methods below describe what functionality the shop needs. Exact names a
 Which of the items listed in the table above are supported (OIDC discovery, PKCE, JWKS, `roles` claim, audience)? Can you register two clients (`icomers-storefront`, `icomers-admin`) and create the admin roles? Please provide the issuer URL (dev / staging / prod).
 :::
 
-:::question id="identity-login-ui" to="Identity team"
-Is the login / registration page a hosted Identity page? Does it support Georgian and allow branding customization? Is registration by email, by phone (SMS), or both?
-:::
-
 :::question id="platform-s2s-auth" to="Platform / Backend team"
 How is service-to-service authentication done over gRPC: **mTLS**, **service token**, or no authentication inside the internal network?
 :::

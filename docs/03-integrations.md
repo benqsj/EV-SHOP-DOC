@@ -32,10 +32,6 @@
 ზემოთ ცხრილში ჩამოთვლილთაგან რომელია მხარდაჭერილი (OIDC discovery, PKCE, JWKS, `roles` claim, audience)? შეგიძლიათ დაარეგისტრიროთ ორი client (`icomers-storefront`, `icomers-admin`) და შექმნათ ადმინის როლები? გთხოვთ, მიუთითოთ issuer URL (dev / staging / prod).
 :::
 
-:::question id="identity-login-ui" to="Identity გუნდი"
-Login / რეგისტრაციის გვერდი Identity-ის hosted გვერდია? აქვს ქართული ენის მხარდაჭერა და ბრენდინგის შეცვლის შესაძლებლობა? რეგისტრაცია email-ით, ტელეფონით (SMS) თუ ორივეთი?
-:::
-
 :::question id="platform-s2s-auth" to="Platform / Backend გუნდი"
 Service-to-service ავთენტიფიკაცია gRPC-ზე როგორ ხდება: **mTLS**, **service token**, თუ შიდა ქსელში ავთენტიფიკაციის გარეშე?
 :::
